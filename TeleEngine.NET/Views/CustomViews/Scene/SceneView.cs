@@ -8,7 +8,6 @@ namespace TeleEngine.NET.Views.CustomViews.Scene
         protected override OpenGL _openGL { get; set; } =
             new OpenGL()
             {
-
             };
 
         protected override IList<IComponent> Components => new List<IComponent>
@@ -17,7 +16,6 @@ namespace TeleEngine.NET.Views.CustomViews.Scene
 
         public SceneView(OpenGL openGL, int width, int height, int bitDepth) : base(openGL, width, height, bitDepth) 
         {
-
         }
     }
 }
