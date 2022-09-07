@@ -57,9 +57,8 @@ namespace TeleEngine.NET.Views
 
         public long TickDifference { get; protected set; }
 
-        public View(OpenGL openGL, int width, int height, int bitDepth) 
-        {
-            _openGL = openGL;
+        public View(int width, int height, int bitDepth) 
+        { 
             RenderWidth = width;
             RenderHeight = height;
             BitDepth = bitDepth;
@@ -73,6 +72,7 @@ namespace TeleEngine.NET.Views
         {
             while (TickDifference <= 0 && isRunning) 
             {
+                _openGL.MakeCurrent();
                 await RunComponentsRenderAction(async (IComponent currentComponent) 
                     => await currentComponent.UpdateAsync(_openGL));
 

@@ -6,6 +6,7 @@ namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
 {
     public sealed class TriangleComponent : VertexComponent
     {
+        private Color color;
         protected override ImmutableArray<Vector3> vertices 
             => ImmutableArray.Create
             (
@@ -17,12 +18,17 @@ namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
                 }
             );
 
-        public TriangleComponent(Color color) 
+        public TriangleComponent(Color triangleColor) 
         {
+            color = triangleColor;
         }
 
         public override Task StartAsync(OpenGL openGL)
         {
+            var colorRgbArray = new byte[3];
+            color.ToRgb(out colorRgbArray[0], out colorRgbArray[1], out colorRgbArray[2]);
+            openGL.Color(colorRgbArray);
+
             return base.StartAsync(openGL);
         }
     } 
