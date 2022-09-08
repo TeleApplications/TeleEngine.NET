@@ -13,19 +13,17 @@ namespace TeleEngine.NET.Views.CustomViews.Scene
             new TriangleComponent(Color.Black)
         };
 
-        public SceneView(IntPtr handle, int width, int height, int bitDepth = 1) : base(width, height, bitDepth) 
+        public SceneView(IntPtr handle, int width, int height, int bitDepth = 1) : base(handle, width, height, bitDepth) 
         {
-            //_openGL.CreateFromExternalContext(SharpGL.Version.OpenGLVersion.OpenGL4_4, width, height, bitDepth, handle, IntPtr.Zero, IntPtr.Zero);
-            _openGL.Create(SharpGL.Version.OpenGLVersion.OpenGL4_4, RenderContextType.FBO, width, height, bitDepth, null);
-            _openGL.MakeCurrent();
-            _openGL.ClearColor(1, 1, 1, 1);
+            Inicializate();
             _openGL.DrawText(0, 0, 0, 0, 0, "front", 16f, TickDifference.ToString());
             _openGL.Flush();
         }
 
         public async Task StartSceneViewAsync() 
         {
-            Task.WaitAny(StartViewAsync());
+            //Task.WaitAny(StartViewAsync());
+            await StartViewAsync();
             await StartRenderViewAsync();
         }
     }

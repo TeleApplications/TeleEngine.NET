@@ -56,12 +56,31 @@ namespace TeleEngine.NET.Views
         private Stopwatch lastTickWatch = new();
 
         public long TickDifference { get; protected set; } = 0;
+        public List<InicializationAction<OpenGL>> InicializationActions { get; set; } =
+            new();
 
-        public View(int width, int height, int bitDepth) 
-        { 
+
+        public View(nint handle, int width, int height, int bitDepth) 
+        {
+            InicializationActions.Add(new InicializationAction<OpenGL>((OpenGL currentOpenGL) =>
+            {
+                _openGL.CreateFromExternalContext(SharpGL.Version.OpenGLVersion.OpenGL4_4, width, height, bitDepth, handle, IntPtr.Zero, IntPtr.Zero);
+                _openGL.Enable(OpenGL.GL_DEPTH_TEST);
+                _openGL.Viewport(0, 0, width, height);
+                _openGL.MakeCurrent();
+            }));
+
             RenderWidth = width;
             RenderHeight = height;
             BitDepth = bitDepth;
+        }
+
+        public void Inicializate() 
+        {
+            for (int i = 0; i < InicializationActions.Count; i++)
+            {
+                InicializationActions[i].InicializateAction.Invoke(_openGL);
+            }
         }
 
         public virtual async Task StartViewAsync() 
@@ -70,7 +89,7 @@ namespace TeleEngine.NET.Views
 
         protected async Task StartRenderViewAsync() 
         {
-            while (true) 
+            while (TickDifference <= 0 && isRunning) 
             {
                 await RunComponentsRenderAction(async (IComponent currentComponent) 
                     => await currentComponent.UpdateAsync(_openGL));
