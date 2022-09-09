@@ -1,6 +1,4 @@
-﻿using SharpGL;
-using SharpGL.Enumerations;
-using System.Collections.Immutable;
+﻿using Silk.NET.OpenGL;
 using System.Numerics;
 using TeleEngine.NET.Intefaces;
 
@@ -11,30 +9,20 @@ namespace TeleEngine.NET.Components.Vertices
         public int ComponenetId { get; set; }
         public Vector3 DefaultColor { get; set; } = new(1f, 1f, 1f);
 
-        protected abstract ImmutableArray<Vector3> vertices { get; }
-        protected virtual BeginMode vertexMode { get; } = BeginMode.Lines;
+        protected abstract Span<float> vertices { get; }
+        protected virtual GLEnum vertexMode { get; } = GLEnum.Lines;
 
         public Vector3 Position { get; set; } = Vector3.Zero;
         public Vector3 Rotation { get; set; } = Vector3.Zero;
 
-        public virtual async Task StartAsync(OpenGL openGL)
+        public virtual async Task StartAsync(GL openGL)
         {
-            openGL.Clear(OpenGL.GL_ACCUM_BUFFER_BIT);
-            openGL.LoadIdentity();
-            openGL.Translate(Position.X, Position.Y, Position.Z);
-            openGL.Rotate(Rotation.X, Rotation.Y, Rotation.Z);
+            uint currentHandle = VertexHelper<float>.CreatePointer(openGL, vertices, vertexMode);
+            openGL.BindBuffer(vertexMode, currentHandle);
 
-            for (int i = 0; i < vertices.Length; i++)
-            {
-                openGL.Begin(vertexMode);
-
-                var currentVertex = vertices[i];
-                openGL.Vertex4f(currentVertex.X, currentVertex.Y, currentVertex.Z, 1f);
-
-                openGL.End();
-            }
+            openGL.Clear(ClearBufferMask.ColorBufferBit);
         }
 
-        public virtual async Task UpdateAsync(OpenGL openGL) { }
+        public virtual async Task UpdateAsync(GL openGL) { }
     }
 }

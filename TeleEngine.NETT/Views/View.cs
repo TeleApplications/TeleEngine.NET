@@ -1,4 +1,5 @@
-﻿using SharpGL;
+﻿using Silk.NET.OpenGL;
+using Silk.NET.Windowing;
 using System.Diagnostics;
 using System.Numerics;
 using TeleEngine.NET.Intefaces;
@@ -7,17 +8,17 @@ namespace TeleEngine.NET.Views
 {
     public abstract partial class View : Intefaces.IView
     {
-        public int RenderWidth { get; set; }
-        public int RenderHeight { get; set; }
-        public int BitDepth { get; set; }
+        public IWindow ViewWindow { get; set; }
+        public WindowOptions Options { get; set; }
+
         protected virtual IList<IComponent> Components { get; private set; }
 
         public async Task AddComponent<T>(T component) where T : IComponent
         {
             component.ComponenetId = Components.Count;
             Components.Add(component);
-            await component.StartAsync(_openGL);
-            await component.UpdateAsync(_openGL);
+            await component.StartAsync(OpenGL);
+            await component.UpdateAsync(OpenGL);
         }
 
         public void RemoveComponent<T>(T component) where T : IComponent
@@ -49,50 +50,55 @@ namespace TeleEngine.NET.Views
 
     public abstract partial class View : IRenderable
     {
-        protected abstract OpenGL _openGL { get; set; }
+        private static WindowOptions defaultOption = new()
+            {
+                Size = new(800, 600),
+                Title = "DefaultTitle"
+            };
+
         protected Stopwatch tickWatch = new();
 
         private bool isRunning = true;
         private Stopwatch lastTickWatch = new();
 
+        public GL OpenGL { get; set; }
         public long TickDifference { get; protected set; } = 0;
-        public List<InicializationAction<OpenGL>> InicializationActions { get; set; } =
+        public List<InicializationAction<GL>> InicializationActions { get; set; } =
             new();
 
 
-        public View(nint handle, int width, int height, int bitDepth) 
+        public View(WindowOptions? options) 
         {
-            InicializationActions.Add(new InicializationAction<OpenGL>((OpenGL currentOpenGL) =>
-            {
-                _openGL.CreateFromExternalContext(SharpGL.Version.OpenGLVersion.OpenGL4_4, width, height, bitDepth, handle, IntPtr.Zero, IntPtr.Zero);
-                _openGL.Enable(OpenGL.GL_DEPTH_TEST);
-                _openGL.Viewport(0, 0, width, height);
-                _openGL.MakeCurrent();
-            }));
+            var currentOptions = options ?? defaultOption;
+            Options = currentOptions;
 
-            RenderWidth = width;
-            RenderHeight = height;
-            BitDepth = bitDepth;
+            InicializationActions.Add(new InicializationAction<GL>((GL currentOpenGL) =>
+            {
+                currentOpenGL.Enable(GLEnum.DepthTest);
+            }));
+            ViewWindow = Window.Create(Options);
         }
 
         public void Inicializate() 
         {
+            ViewWindow.Load += async() => await StartViewAsync();
+            ViewWindow.Update += async(double doubleHolder) => await StartRenderViewAsync();
             for (int i = 0; i < InicializationActions.Count; i++)
             {
-                InicializationActions[i].InicializateAction.Invoke(_openGL);
+                InicializationActions[i].InicializateAction.Invoke(OpenGL);
             }
         }
 
         public virtual async Task StartViewAsync() 
             => await RunComponentsRenderAction(async(IComponent currentComponent) 
-                => {_openGL.MakeCurrent(); await currentComponent.StartAsync(_openGL); tickWatch.Start(); });
+                => {await currentComponent.StartAsync(OpenGL); tickWatch.Start(); });
 
         protected async Task StartRenderViewAsync() 
         {
             while (TickDifference <= 0 && isRunning) 
             {
                 await RunComponentsRenderAction(async (IComponent currentComponent) 
-                    => await currentComponent.UpdateAsync(_openGL));
+                    => await currentComponent.UpdateAsync(OpenGL));
 
                 TickDifference = CalculateTickDifference();
                 lastTickWatch = tickWatch;

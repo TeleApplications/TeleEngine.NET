@@ -1,10 +1,10 @@
-﻿
+﻿using Silk.NET.Windowing;
+
 namespace TeleEngine.NET.Intefaces
 {
     public interface IView
     {
-        public int RenderWidth { get; set; }
-        public int RenderHeight { get; set; }
-        public int BitDepth { get; set; }
+        public IWindow ViewWindow { get; set; }
+        public WindowOptions Options { get; set; }
     }
 }
