@@ -1,5 +1,4 @@
 using Silk.NET.Windowing;
-using System.Runtime.InteropServices;
 using TeleEngine.NET.Views.CustomViews.Scene;
 
 namespace TeleEngine.NET.Examples.GettingStarted

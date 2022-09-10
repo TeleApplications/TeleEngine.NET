@@ -15,12 +15,14 @@ namespace TeleEngine.NET.Components.Vertices
         public Vector3 Position { get; set; } = Vector3.Zero;
         public Vector3 Rotation { get; set; } = Vector3.Zero;
 
-        public virtual async Task StartAsync(GL openGL)
+        public unsafe virtual async Task StartAsync(GL openGL)
         {
             uint currentHandle = VertexHelper<float>.CreatePointer(openGL, vertices, vertexMode);
-            openGL.BindBuffer(vertexMode, currentHandle);
-
-            openGL.Clear(ClearBufferMask.ColorBufferBit);
+            fixed (void* data = vertices) 
+            {
+                openGL.BindVertexArray((uint)data);
+            }
+            openGL.DrawArrays(PrimitiveType.Lines, 0, (uint)vertices.Length);
         }
 
         public virtual async Task UpdateAsync(GL openGL) { }

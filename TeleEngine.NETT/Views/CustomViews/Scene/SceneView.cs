@@ -10,21 +10,20 @@ namespace TeleEngine.NET.Views.CustomViews.Scene
     {
         protected override IList<IComponent> Components => new List<IComponent>
         {
-            new TriangleComponent(Color.Black)
+            new TriangleComponent(Color.White)
         };
 
         public SceneView(WindowOptions windowOptions) : base(windowOptions) 
         {
-            ViewWindow.Run();
-            OpenGL = GL.GetApi(ViewWindow);
-
-            Inicializate();
-        }
-
-        public async Task StartSceneViewAsync() 
-        {
-            await StartViewAsync();
-            await StartRenderViewAsync();
+            var currentTask = Task.Run(() => 
+            {
+                ViewWindow.Load += () =>
+                {
+                    OpenGL = GL.GetApi(ViewWindow);
+                    Inicializate();
+                };
+                    ViewWindow.Run();
+            });
         }
     }
 }

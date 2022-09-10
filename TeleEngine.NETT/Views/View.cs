@@ -1,7 +1,9 @@
 ﻿using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using System.Diagnostics;
+using System.Drawing;
 using System.Numerics;
+using TeleEngine.NET.Components.Vertices;
 using TeleEngine.NET.Intefaces;
 
 namespace TeleEngine.NET.Views
@@ -81,29 +83,29 @@ namespace TeleEngine.NET.Views
 
         public void Inicializate() 
         {
-            ViewWindow.Load += async() => await StartViewAsync();
-            ViewWindow.Update += async(double doubleHolder) => await StartRenderViewAsync();
             for (int i = 0; i < InicializationActions.Count; i++)
             {
                 InicializationActions[i].InicializateAction.Invoke(OpenGL);
             }
+            ViewWindow.Render += async(double doubleHolder) => await StartViewAsync();
+            ViewWindow.Render += async(double doubleHolder) => await StartRenderViewAsync();
         }
 
         public virtual async Task StartViewAsync() 
             => await RunComponentsRenderAction(async(IComponent currentComponent) 
-                => {await currentComponent.StartAsync(OpenGL); tickWatch.Start(); });
+                => {await currentComponent.StartAsync(OpenGL); tickWatch.Start(); OpenGL.Flush(); });
 
         protected async Task StartRenderViewAsync() 
         {
-            while (TickDifference <= 0 && isRunning) 
-            {
-                await RunComponentsRenderAction(async (IComponent currentComponent) 
-                    => await currentComponent.UpdateAsync(OpenGL));
+            OpenGL.Clear((uint)ClearBufferMask.ColorBufferBit);
+            OpenGL.ClearColor(Color.White);
+            await RunComponentsRenderAction(async (IComponent currentComponent) 
+               => await currentComponent.UpdateAsync(OpenGL));
 
                 TickDifference = CalculateTickDifference();
                 lastTickWatch = tickWatch;
                 tickWatch.Restart();
-            }
+                OpenGL.Flush();
         }
 
         private long CalculateTickDifference() 
