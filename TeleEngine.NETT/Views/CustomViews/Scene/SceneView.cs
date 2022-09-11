@@ -19,10 +19,8 @@ namespace TeleEngine.NET.Views.CustomViews.Scene
             {
                 ViewWindow.Load += () =>
                 {
-                    OpenGL = GL.GetApi(ViewWindow);
                     Inicializate();
                 };
-                    ViewWindow.Run();
             });
         }
     }

@@ -18,7 +18,7 @@ namespace TeleEngine.NET.Examples.GettingStarted
             options.Title = "DefaultWindow";
             options.Position = new(0, 0);
 
-            currentScene = new(options);
+            Task.Run(() => currentScene = new(options));
         }
     }
 }

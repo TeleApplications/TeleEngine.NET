@@ -3,6 +3,7 @@ using Silk.NET.Windowing;
 using System.Diagnostics;
 using System.Drawing;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using TeleEngine.NET.Components.Vertices;
 using TeleEngine.NET.Intefaces;
 
@@ -10,6 +11,26 @@ namespace TeleEngine.NET.Views
 {
     public abstract partial class View : Intefaces.IView
     {
+        private static readonly string VertexShaderSource = @"
+        #version 330 core 
+        layout (location = 0) in vec3 aPos;
+        layout (location = 20) uniform mat4 model;
+
+        void main()
+        {
+            gl_Position = model * vec4(aPos.x, aPos.y, aPos.z, 1.0);
+        }
+        ";
+
+        private static readonly string FragmentShaderSource = @"
+        #version 330 core
+        out vec4 FragColor;
+        void main()
+        {
+            FragColor = vec4(254f, 0.5f, 128f, 1.0f);
+        }
+        ";
+
         public IWindow ViewWindow { get; set; }
         public WindowOptions Options { get; set; }
 
@@ -19,7 +40,7 @@ namespace TeleEngine.NET.Views
         {
             component.ComponenetId = Components.Count;
             Components.Add(component);
-            await component.StartAsync(OpenGL);
+            await component.StartAsync(OpenGL, ViewWindow);
             await component.UpdateAsync(OpenGL);
         }
 
@@ -52,10 +73,11 @@ namespace TeleEngine.NET.Views
 
     public abstract partial class View : IRenderable
     {
+        private VertexData vertexData;
         private static WindowOptions defaultOption = new()
             {
                 Size = new(800, 600),
-                Title = "DefaultTitle"
+                Title = "DefaultTitle",
             };
 
         protected Stopwatch tickWatch = new();
@@ -64,10 +86,13 @@ namespace TeleEngine.NET.Views
         private Stopwatch lastTickWatch = new();
 
         public GL OpenGL { get; set; }
+        public uint ViewShader { get; set; }
+
+        public double DeltaTime { get; private set; }
         public long TickDifference { get; protected set; } = 0;
+
         public List<InicializationAction<GL>> InicializationActions { get; set; } =
             new();
-
 
         public View(WindowOptions? options) 
         {
@@ -79,33 +104,71 @@ namespace TeleEngine.NET.Views
                 currentOpenGL.Enable(GLEnum.DepthTest);
             }));
             ViewWindow = Window.Create(Options);
+
+            ViewWindow.Load += async() => {OpenGL = GL.GetApi(ViewWindow); await StartViewAsync(); };
+            ViewWindow.Render += (double doubleHolder) => RenderViewAsync();
+            ViewWindow.Update += async(double doubleHolder) => { DeltaTime = doubleHolder; await UpdateViewAsync(); };
+
+            ViewWindow.Run();
         }
 
         public void Inicializate() 
         {
+            OpenGL.PolygonMode(GLEnum.FrontAndBack, GLEnum.Fill);
+            OpenGL.PatchParameter(GLEnum.PatchVertices, 3);
+
             for (int i = 0; i < InicializationActions.Count; i++)
             {
                 InicializationActions[i].InicializateAction.Invoke(OpenGL);
             }
-            ViewWindow.Render += async(double doubleHolder) => await StartViewAsync();
-            ViewWindow.Render += async(double doubleHolder) => await StartRenderViewAsync();
         }
 
-        public virtual async Task StartViewAsync() 
-            => await RunComponentsRenderAction(async(IComponent currentComponent) 
-                => {await currentComponent.StartAsync(OpenGL); tickWatch.Start(); OpenGL.Flush(); });
-
-        protected async Task StartRenderViewAsync() 
+        public unsafe void RenderViewAsync() 
         {
             OpenGL.Clear((uint)ClearBufferMask.ColorBufferBit);
-            OpenGL.ClearColor(Color.White);
+
+            OpenGL.BindVertexArray(vertexData.VertexBufferPointer);
+            OpenGL.UseProgram(ViewShader);
+            OpenGL.DrawElements(PrimitiveType.Triangles, 256, DrawElementsType.UnsignedInt, null);
+        }
+
+        public virtual async Task StartViewAsync()
+        {
+
+            await RunComponentsRenderAction(async (IComponent currentComponent) =>
+            {
+                await currentComponent.StartAsync(OpenGL, ViewWindow);
+                vertexData = currentComponent.Data;
+                tickWatch.Start();
+                OpenGL.Flush();
+
+                unsafe 
+                {
+                    var shaderLocation = OpenGL.GetUniformLocation(ViewShader, "model");
+                    var matrixData = currentComponent.Transform;
+                    OpenGL.UniformMatrix4(shaderLocation, 1, false, (float*) &matrixData);
+
+                    ViewShader = OpenGL.CreateProgram();
+
+                    OpenGL.AttachShader(ViewShader, VertexHelper.CreateShaderPointer(OpenGL, ShaderType.VertexShader, VertexShaderSource));
+                    OpenGL.AttachShader(ViewShader, VertexHelper.CreateShaderPointer(OpenGL, ShaderType.FragmentShader, FragmentShaderSource));
+                    OpenGL.LinkProgram(ViewShader);
+
+                    OpenGL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, Silk.NET.OpenGL.Boolean.False, 3 * sizeof(float), (void*)0);
+                    OpenGL.EnableVertexAttribArray(0);
+                }
+            });
+        }
+
+        protected async Task UpdateViewAsync() 
+        {
+            ViewWindow.Title = $"{TickDifference}";
             await RunComponentsRenderAction(async (IComponent currentComponent) 
                => await currentComponent.UpdateAsync(OpenGL));
 
                 TickDifference = CalculateTickDifference();
                 lastTickWatch = tickWatch;
                 tickWatch.Restart();
-                OpenGL.Flush();
         }
 
         private long CalculateTickDifference() 

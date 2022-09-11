@@ -1,5 +1,7 @@
 ﻿using Silk.NET.OpenGL;
+using Silk.NET.Windowing;
 using System.Drawing;
+using System.Numerics;
 
 namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
 {
@@ -7,12 +9,29 @@ namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
     {
         private Color color;
 
-        protected override Span<float> vertices =>
-            new float[]
+        public override Transform Transform { get; set; } =
+            new Transform()
             {
-                1f, 1F, 1f,
-                1f, 0.5f, 0,
-                1f, 0, 0.5f
+                Position = new(20, 1, 1),
+                Rotation = Quaternion.Identity,
+                Scale = 2 
+            };
+
+        public override VertexModel Model =>
+            new VertexModel()
+            {
+                Vertices = new float[]
+                {
+                    0.5f,  0.5f, 0.0f,
+                    0.5f, -0.5f, 0.0f,
+                   -0.5f, -0.5f, 0.0f,
+                   -0.5f,  0.5f, 0.5f
+                },
+                Indexes = new uint[]
+                {
+                    0, 1, 3,
+                    1, 2, 3
+                }
             };
 
         public TriangleComponent(Color triangleColor) 
@@ -20,10 +39,23 @@ namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
             color = triangleColor;
         }
 
-        public override Task StartAsync(GL openGL)
+        public override Task StartAsync(GL openGL, IWindow window)
         {
-            openGL.BlendColor(color);
-            return base.StartAsync(openGL);
+            return base.StartAsync(openGL, window);
+        }
+
+        public override Task UpdateAsync(GL openGL)
+        {
+            var currentTransform = Transform;
+            currentTransform.Position = new(((currentTransform.Position.X + 5)), currentTransform.Position.Y, currentTransform.Position.Z);
+            Transform = new Transform()
+            {
+                Position = currentTransform.Position,
+                Rotation = currentTransform.Rotation,
+                Scale = currentTransform.Scale
+            };
+
+            return base.UpdateAsync(openGL);
         }
     } 
 }
