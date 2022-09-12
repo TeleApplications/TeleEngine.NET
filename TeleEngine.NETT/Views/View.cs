@@ -14,11 +14,10 @@ namespace TeleEngine.NET.Views
         private static readonly string VertexShaderSource = @"
         #version 330 core 
         layout (location = 0) in vec3 aPos;
-        layout (location = 20) uniform mat4 model;
 
         void main()
         {
-            gl_Position = model * vec4(aPos.x, aPos.y, aPos.z, 1.0);
+            gl_Position = vec4(aPos, 1.0);
         }
         ";
 
@@ -27,7 +26,7 @@ namespace TeleEngine.NET.Views
         out vec4 FragColor;
         void main()
         {
-            FragColor = vec4(254f, 0.5f, 128f, 1.0f);
+            FragColor = vec4(24, 0.5, 18, 1.0);
         }
         ";
 
@@ -134,6 +133,22 @@ namespace TeleEngine.NET.Views
 
         public virtual async Task StartViewAsync()
         {
+                unsafe 
+                {
+                    ViewShader = OpenGL.CreateProgram();
+
+                    //var shaderLocation = OpenGL.GetUniformLocation(ViewShader, "model");
+                    //var matrixData = currentComponent.Transform;
+                    //OpenGL.UniformMatrix4(shaderLocation, 1, false, (float*) &matrixData);
+
+                    OpenGL.AttachShader(ViewShader, VertexHelper.CreateShaderPointer(OpenGL, ShaderType.VertexShader, VertexShaderSource));
+                    OpenGL.AttachShader(ViewShader, VertexHelper.CreateShaderPointer(OpenGL, ShaderType.FragmentShader, FragmentShaderSource));
+                    OpenGL.LinkProgram(ViewShader);
+                    //OpenGL.UseProgram(ViewShader);
+
+                    OpenGL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, Silk.NET.OpenGL.Boolean.False, 3 * sizeof(float), null);
+                    OpenGL.EnableVertexAttribArray(0);
+                }
 
             await RunComponentsRenderAction(async (IComponent currentComponent) =>
             {
@@ -142,21 +157,6 @@ namespace TeleEngine.NET.Views
                 tickWatch.Start();
                 OpenGL.Flush();
 
-                unsafe 
-                {
-                    var shaderLocation = OpenGL.GetUniformLocation(ViewShader, "model");
-                    var matrixData = currentComponent.Transform;
-                    OpenGL.UniformMatrix4(shaderLocation, 1, false, (float*) &matrixData);
-
-                    ViewShader = OpenGL.CreateProgram();
-
-                    OpenGL.AttachShader(ViewShader, VertexHelper.CreateShaderPointer(OpenGL, ShaderType.VertexShader, VertexShaderSource));
-                    OpenGL.AttachShader(ViewShader, VertexHelper.CreateShaderPointer(OpenGL, ShaderType.FragmentShader, FragmentShaderSource));
-                    OpenGL.LinkProgram(ViewShader);
-
-                    OpenGL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, Silk.NET.OpenGL.Boolean.False, 3 * sizeof(float), (void*)0);
-                    OpenGL.EnableVertexAttribArray(0);
-                }
             });
         }
 
