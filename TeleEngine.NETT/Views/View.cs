@@ -1,9 +1,8 @@
 ﻿using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using System.Diagnostics;
-using System.Drawing;
 using System.Numerics;
-using System.Runtime.CompilerServices;
+using TeleEngine.NET.Components;
 using TeleEngine.NET.Components.Vertices;
 using TeleEngine.NET.Intefaces;
 
@@ -15,9 +14,11 @@ namespace TeleEngine.NET.Views
         #version 330 core 
         layout (location = 0) in vec3 aPos;
 
+        uniform mat4 model;
+
         void main()
         {
-            gl_Position = vec4(aPos, 1.0);
+            gl_Position = model * vec4(aPos, 1.0);
         }
         ";
 
@@ -26,7 +27,7 @@ namespace TeleEngine.NET.Views
         out vec4 FragColor;
         void main()
         {
-            FragColor = vec4(24, 0.5, 18, 1.0);
+            FragColor = vec4(0.1, 0.5, 0.1, 1.0);
         }
         ";
 
@@ -126,6 +127,12 @@ namespace TeleEngine.NET.Views
         {
             OpenGL.Clear((uint)ClearBufferMask.ColorBufferBit);
 
+            OpenGL.UseProgram(ViewShader);
+            var shaderLocation = OpenGL.GetUniformLocation(ViewShader, "model");
+            var matrixData = new Transform() { Position = new(0.02f, 0, 1), Rotation = new(-1f, 0.2f, 0f, 0f), Scale = 1 };
+            var matrixTransform = matrixData.MatrixTransform;
+            OpenGL.UniformMatrix4(shaderLocation, 1, false, (float*) &(matrixTransform));
+
             OpenGL.BindVertexArray(vertexData.VertexBufferPointer);
             OpenGL.UseProgram(ViewShader);
             OpenGL.DrawElements(PrimitiveType.Triangles, 256, DrawElementsType.UnsignedInt, null);
@@ -133,22 +140,6 @@ namespace TeleEngine.NET.Views
 
         public virtual async Task StartViewAsync()
         {
-                unsafe 
-                {
-                    ViewShader = OpenGL.CreateProgram();
-
-                    //var shaderLocation = OpenGL.GetUniformLocation(ViewShader, "model");
-                    //var matrixData = currentComponent.Transform;
-                    //OpenGL.UniformMatrix4(shaderLocation, 1, false, (float*) &matrixData);
-
-                    OpenGL.AttachShader(ViewShader, VertexHelper.CreateShaderPointer(OpenGL, ShaderType.VertexShader, VertexShaderSource));
-                    OpenGL.AttachShader(ViewShader, VertexHelper.CreateShaderPointer(OpenGL, ShaderType.FragmentShader, FragmentShaderSource));
-                    OpenGL.LinkProgram(ViewShader);
-                    //OpenGL.UseProgram(ViewShader);
-
-                    OpenGL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, Silk.NET.OpenGL.Boolean.False, 3 * sizeof(float), null);
-                    OpenGL.EnableVertexAttribArray(0);
-                }
 
             await RunComponentsRenderAction(async (IComponent currentComponent) =>
             {
@@ -156,6 +147,21 @@ namespace TeleEngine.NET.Views
                 vertexData = currentComponent.Data;
                 tickWatch.Start();
                 OpenGL.Flush();
+
+                unsafe 
+                {
+                    OpenGL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 5 * ((uint)sizeof(float)), ((void*)(0 * sizeof(float))));
+                    OpenGL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 5 * ((uint)sizeof(float)), ((void*)(3 * sizeof(float))));
+
+                    ViewShader = OpenGL.CreateProgram();
+
+                    OpenGL.AttachShader(ViewShader, VertexHelper.CreateShaderPointer(OpenGL, ShaderType.VertexShader, VertexShaderSource));
+                    OpenGL.AttachShader(ViewShader, VertexHelper.CreateShaderPointer(OpenGL, ShaderType.FragmentShader, FragmentShaderSource));
+                    OpenGL.LinkProgram(ViewShader);
+                    OpenGL.UseProgram(ViewShader);
+
+                    OpenGL.EnableVertexAttribArray(0);
+                }
 
             });
         }
