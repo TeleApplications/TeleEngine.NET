@@ -17,5 +17,7 @@ namespace TeleEngine.NET.Intefaces
         public async Task StartAsync(GL openGL, IWindow window) { }
 
         public async Task UpdateAsync(GL openGL) { }
+
+        public async Task RenderAsync(GL openGL) { }
     }
 }

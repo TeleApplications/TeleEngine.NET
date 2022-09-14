@@ -24,5 +24,10 @@ namespace TeleEngine.NET.Components.Vertices
         }
 
         public virtual async Task UpdateAsync(GL openGL) { }
+
+        public virtual async Task RenderAsync() 
+        {
+
+        }
     }
 }
