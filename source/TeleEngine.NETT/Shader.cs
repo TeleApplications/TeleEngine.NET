@@ -1,5 +1,5 @@
 ﻿using Silk.NET.OpenGL;
-using TeleEngine.NET.Interfaces;
+using TeleEngine.NET.Intefaces;
 
 namespace TeleEngine.NET
 {

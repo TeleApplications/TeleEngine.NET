@@ -55,6 +55,7 @@ namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
                 Scale = currentTransform.Scale
             };
 
+
             return base.UpdateAsync(openGL);
         }
     } 

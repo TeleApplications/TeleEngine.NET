@@ -1,5 +1,4 @@
-﻿
-namespace TeleEngine.NET.Interfaces
+﻿namespace TeleEngine.NET.Intefaces
 {
     public interface IBindable
     {
