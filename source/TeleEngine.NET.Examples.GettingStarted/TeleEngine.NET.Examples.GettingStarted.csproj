@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TeleEngine.NETT\TeleEngine.NET.csproj" />
+    <ProjectReference Include="..\TeleEngine.NET\TeleEngine.NET.csproj" />
   </ItemGroup>
 
 </Project>
