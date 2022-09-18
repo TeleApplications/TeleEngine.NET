@@ -12,6 +12,7 @@ namespace TeleEngine.NET.Intefaces
         public abstract Transform Transform { get; set; }
 
         public abstract VertexModel Model { get; }
+
         public VertexData Data { get; set; }
 
         public async Task StartAsync(GL openGL, IWindow window) { }

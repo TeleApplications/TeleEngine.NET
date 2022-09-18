@@ -7,7 +7,7 @@ namespace TeleEngine.NET.Views.CustomViews.Scene
 {
     public sealed class SceneView : View
     {
-        protected override IList<IComponent> Components => new List<IComponent>
+        protected override IList<IComponent> Components { get; set; } = new List<IComponent>
         {
             new TriangleComponent(Color.White)
         };

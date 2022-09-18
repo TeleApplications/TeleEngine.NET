@@ -12,7 +12,7 @@ namespace TeleEngine.NET.Views
         public IWindow ViewWindow { get; set; }
         public WindowOptions Options { get; set; }
 
-        protected virtual IList<IComponent> Components { get; private set; }
+        protected virtual IList<IComponent> Components { get; set; }
 
         public async Task AddComponent<T>(T component) where T : IComponent
         {
@@ -81,9 +81,9 @@ namespace TeleEngine.NET.Views
             }));
             ViewWindow = Window.Create(Options);
 
-            ViewWindow.Load += async() => { OpenGL = GL.GetApi(ViewWindow); await StartViewAsync(); };
-            ViewWindow.Render += async(double doubleHolder) => await RenderViewAsync();
-            ViewWindow.Update += async(double doubleHolder) => { DeltaTime = doubleHolder; await UpdateViewAsync(); };
+            ViewWindow.Load += async() => { await StartViewAsync(); };
+            ViewWindow.Render += async(double doubleHolder) => await RenderViewAsync(doubleHolder);
+            ViewWindow.Update += async(double doubleHolder) => { await UpdateViewAsync(); };
 
             ViewWindow.Run();
         }
@@ -99,35 +99,31 @@ namespace TeleEngine.NET.Views
             }
         }
 
-        public async Task RenderViewAsync() 
+        public async Task RenderViewAsync(double renderTime) 
         {
+            DeltaTime = renderTime; 
             OpenGL.Clear((uint)ClearBufferMask.ColorBufferBit);
 
             await RunComponentsRenderAction(async (IComponent currentComponent) =>
             {
                 await currentComponent.RenderAsync(OpenGL);
+                OpenGL.BindVertexArray(vertexData.VertexBufferPointer);
                 vertexData = currentComponent.Data;
                 tickWatch.Start();
-                OpenGL.Flush();
-                OpenGL.BindVertexArray(vertexData.VertexBufferPointer);
-            unsafe 
-            {
-                OpenGL.DrawElements(PrimitiveType.Triangles, 256, DrawElementsType.UnsignedInt, null);
-            }
+
+                unsafe 
+                {
+                    OpenGL.DrawElements(PrimitiveType.Triangles, 256, DrawElementsType.UnsignedInt, null);
+                }
             });
         }
 
         public virtual async Task StartViewAsync()
         {
+            OpenGL = GL.GetApi(ViewWindow); 
             await RunComponentsRenderAction(async (IComponent currentComponent) =>
             {
-                unsafe 
-                {
-                    OpenGL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 5 * ((uint)sizeof(float)), ((void*)(0 * sizeof(float))));
-                    OpenGL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 5 * ((uint)sizeof(float)), ((void*)(3 * sizeof(float))));
-                }
                 await currentComponent.StartAsync(OpenGL, ViewWindow);
-
                 vertexData = currentComponent.Data;
                 tickWatch.Start();
                 OpenGL.Flush();

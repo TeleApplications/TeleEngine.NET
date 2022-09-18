@@ -12,9 +12,9 @@ namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
         public override Transform Transform { get; set; } =
             new Transform()
             {
-                Position = new(20, 1, 1),
-                Rotation = Quaternion.Identity,
-                Scale = 2 
+                Position = new(0.02f, 0, 1),
+                Rotation = new(0f, 0.2f, 0f, 0f),
+                Scale = 1 
             };
 
         public override VertexModel Model =>
@@ -47,7 +47,7 @@ namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
         public override Task UpdateAsync(GL openGL)
         {
             var currentTransform = Transform;
-            currentTransform.Position = new(((currentTransform.Position.X + 5)), currentTransform.Position.Y, currentTransform.Position.Z);
+            currentTransform.Position = new(((currentTransform.Position.X + 0.001f)), currentTransform.Position.Y, currentTransform.Position.Z);
             Transform = new Transform()
             {
                 Position = currentTransform.Position,

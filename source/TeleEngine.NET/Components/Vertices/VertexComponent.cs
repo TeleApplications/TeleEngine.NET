@@ -7,7 +7,7 @@ namespace TeleEngine.NET.Components.Vertices
 {
     public abstract class VertexComponent : IComponent
     {
-        protected Shader vertexShader { get; set; }
+        public Shader vertexShader { get; set; }
         protected virtual GLEnum vertexMode { get; } = GLEnum.Lines;
 
         public abstract Transform Transform { get; set; }
@@ -19,11 +19,9 @@ namespace TeleEngine.NET.Components.Vertices
 
         public virtual async Task StartAsync(GL openGL, IWindow window)
         {
-            vertexShader = Shader.CreateDefaultShader(openGL);
-            await vertexShader.BindAsync();
-
             var currentHandle = VertexHelper.CreatePointer(openGL, Model);
             Data = currentHandle;
+            await InicializateAsync(openGL);
         }
 
         public virtual async Task UpdateAsync(GL openGL)
@@ -32,8 +30,19 @@ namespace TeleEngine.NET.Components.Vertices
 
         public virtual async Task RenderAsync(GL openGL) 
         {
+            vertexShader.SetValue("model", Transform.MatrixTransform);
             openGL.UseProgram(vertexShader.ShaderHandle);
-            //vertexShader.SetValue("model", Transform.MatrixTransform);
+        }
+
+        private async Task InicializateAsync(GL openGL) 
+        {
+            unsafe 
+            {
+                openGL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 5 * ((uint)sizeof(float)), ((void*)(0 * sizeof(float))));
+                openGL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 5 * ((uint)sizeof(float)), ((void*)(3 * sizeof(float))));
+            }
+            vertexShader = Shader.CreateDefaultShader(openGL);
+            await vertexShader.BindAsync();
         }
     }
 }

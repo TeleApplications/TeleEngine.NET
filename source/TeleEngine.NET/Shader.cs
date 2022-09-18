@@ -25,19 +25,16 @@ namespace TeleEngine.NET
 
         public uint ShaderHandle { get; private set; }
 
+        private readonly string _vertexPath;
+        private readonly string _fragmentPath;
+
         public Shader(GL openGL, string vertexPath, string fragmentPath) 
         {
-            unsafe 
-            {
-                _openGL = openGL;
-            }
+            _openGL = openGL;
             ShaderHandle = _openGL.CreateProgram();
 
-            shaderHandler = new
-                (
-                    GetShaderHandleAsync(vertexPath, ShaderType.VertexShader).Result,
-                    GetShaderHandleAsync(fragmentPath, ShaderType.FragmentShader).Result
-                );
+            _vertexPath = vertexPath;
+            _fragmentPath = fragmentPath;
         }
 
 
@@ -46,7 +43,7 @@ namespace TeleEngine.NET
 
         private async Task<uint> GetShaderHandleAsync(string path, ShaderType shaderType) 
         {
-            var source = await File.ReadAllTextAsync(path);
+            var source = File.ReadAllText(path);
             return VertexHelper.CreateShaderPointer(_openGL, shaderType, source);
         }
 
@@ -80,12 +77,18 @@ namespace TeleEngine.NET
 
         public unsafe async Task BindAsync() 
         {
+            shaderHandler = new
+                (
+                    GetShaderHandleAsync(_vertexPath, ShaderType.VertexShader).Result,
+                    GetShaderHandleAsync(_fragmentPath, ShaderType.FragmentShader).Result
+                );
+
             _openGL.AttachShader(ShaderHandle, shaderHandler.VertexHandle);
             _openGL.AttachShader(ShaderHandle, shaderHandler.FragmentHandle);
             _openGL.LinkProgram(ShaderHandle);
             _openGL.UseProgram(ShaderHandle);
 
-            //DetachShaders(shaderHandler.VertexHandle, shaderHandler.FragmentHandle);
+            DetachShaders(shaderHandler.VertexHandle, shaderHandler.FragmentHandle);
             _openGL.EnableVertexAttribArray(0);
         }
 
