@@ -11,5 +11,5 @@ in a low level form
 ### TODO
 - [ ] Loading vertices from .obj, .fbx, .stl, .dae, .abc, .svg
 - [ ] Generating shaders from C# implementation
-- [ ] Having at least two build in camara components
+- [ ] Having at least two build in camera components
 - [ ] Create a proper documentation
