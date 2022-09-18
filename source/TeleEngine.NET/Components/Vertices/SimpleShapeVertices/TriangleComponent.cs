@@ -1,7 +1,7 @@
 ﻿using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using System.Drawing;
-using System.Numerics;
+using TeleEngine.NET.Components.Vertices.DefaultModels.Models;
 
 namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
 {
@@ -13,26 +13,11 @@ namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
             new Transform()
             {
                 Position = new(0.02f, 0, 1),
-                Rotation = new(0f, 0.2f, 0f, 0f),
+                Rotation = new(0f, 0f, 0f, 0f),
                 Scale = 1 
             };
 
-        public override VertexModel Model =>
-            new VertexModel()
-            {
-                Vertices = new float[]
-                {
-                    0.5f,  0.5f, 0.0f,
-                    0.5f, -0.5f, 0.0f,
-                   -0.5f, -0.5f, 0.0f,
-                   -0.5f,  0.5f, 0.5f
-                },
-                Indexes = new uint[]
-                {
-                    0, 1, 3,
-                    1, 2, 3
-                }
-            };
+        public override VertexModel Model => TriangleModel.Shared.Model;
 
         public TriangleComponent(Color triangleColor) 
         {
@@ -47,7 +32,8 @@ namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
         public override Task UpdateAsync(GL openGL)
         {
             var currentTransform = Transform;
-            currentTransform.Position = new(((currentTransform.Position.X + 0.001f)), currentTransform.Position.Y, currentTransform.Position.Z);
+
+            currentTransform.Rotation = new(((currentTransform.Rotation.X + 0.001f)), currentTransform.Rotation.Y, currentTransform.Rotation.Z, currentTransform.Rotation.W);
             Transform = new Transform()
             {
                 Position = currentTransform.Position,

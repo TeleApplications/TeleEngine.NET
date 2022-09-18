@@ -2,12 +2,13 @@
 using Silk.NET.Windowing;
 using System.Numerics;
 using TeleEngine.NET.Intefaces;
+using TeleEngine.NET.Shaders;
 
 namespace TeleEngine.NET.Components.Vertices
 {
     public abstract class VertexComponent : IComponent
     {
-        public Shader vertexShader { get; set; }
+        protected ShaderCore vertexShader { get; set; }
         protected virtual GLEnum vertexMode { get; } = GLEnum.Lines;
 
         public abstract Transform Transform { get; set; }
@@ -41,7 +42,7 @@ namespace TeleEngine.NET.Components.Vertices
                 openGL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 5 * ((uint)sizeof(float)), ((void*)(0 * sizeof(float))));
                 openGL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 5 * ((uint)sizeof(float)), ((void*)(3 * sizeof(float))));
             }
-            vertexShader = Shader.CreateDefaultShader(openGL);
+            vertexShader = ShaderCore.CreateDefaultShader(openGL);
             await vertexShader.BindAsync();
         }
     }
