@@ -13,3 +13,6 @@ in a low level form
 - [ ] Generating shaders from C# implementation
 - [ ] Having at least two build in camera components
 - [ ] Create a proper documentation
+
+### LICENSE
+> The [MIT license](https://github.com/TeleApplications/TeleEngine.NET/blob/master/LICENSE.txt) was choose due to [Silk.NET](https://github.com/dotnet/Silk.NET) license 
