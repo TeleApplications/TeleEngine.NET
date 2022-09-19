@@ -40,11 +40,10 @@ namespace TeleEngine.NET.Shaders
             if (uniformLocation == -1)
                 throw new Exception($"Uniform {uniform} was not found");
 
-            if (value is Vector3 || value is Matrix4x4)
-            {
-                var currentMatrix = value is Vector3 vectorValue ? Matrix4x4.CreateTranslation(vectorValue) : (Matrix4x4)(object)value;
-                _openGL.UniformMatrix4(uniformLocation, 1, false, (float*)&currentMatrix);
-            }
+            if (value is Matrix4x4 matrixValue)
+                _openGL.UniformMatrix4(uniformLocation, 1, false, (float*)&matrixValue);
+            if (value is Vector3 vectorValue)
+                _openGL.Uniform3(uniformLocation, vectorValue);
 
             if (value is int intValue)
                 _openGL.Uniform1(uniformLocation, intValue);

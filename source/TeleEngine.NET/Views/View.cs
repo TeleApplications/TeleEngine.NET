@@ -81,9 +81,12 @@ namespace TeleEngine.NET.Views
             }));
             ViewWindow = Window.Create(Options);
 
-            ViewWindow.Load += async() => { await StartViewAsync(); };
-            ViewWindow.Render += async(double doubleHolder) => await RenderViewAsync(doubleHolder);
-            ViewWindow.Update += async(double doubleHolder) => { await UpdateViewAsync(); };
+            ViewWindow.Load += async() 
+                => await StartViewAsync();
+            ViewWindow.Render += async(double doubleHolder) 
+                => await RenderViewAsync(doubleHolder);
+            ViewWindow.Update += async(double doubleHolder) 
+                => await UpdateViewAsync();
 
             ViewWindow.Run();
         }
@@ -164,6 +167,5 @@ namespace TeleEngine.NET.Views
                 isRunning = false;
             }
         }
-
     }
 }
