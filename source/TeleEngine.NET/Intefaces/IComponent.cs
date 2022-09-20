@@ -1,6 +1,5 @@
 ﻿using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
-using System.Numerics;
 using TeleEngine.NET.Components;
 using TeleEngine.NET.Components.Vertices;
 

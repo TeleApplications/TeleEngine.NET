@@ -47,7 +47,6 @@ namespace TeleEngine.NET.Components.Vertices
             {
                 openGL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 5 * ((uint)sizeof(float)), ((void*)(0 * sizeof(float))));
                 openGL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 5 * ((uint)sizeof(float)), ((void*)(3 * sizeof(float))));
-                openGL.VertexAttribPointer(2, 4, VertexAttribPointerType.Float, false, 5 * ((uint)sizeof(float)), ((void*)(3 * sizeof(float))));
             }
             vertexShader = ShaderCore.CreateDefaultShader(openGL);
             await vertexShader.BindAsync();

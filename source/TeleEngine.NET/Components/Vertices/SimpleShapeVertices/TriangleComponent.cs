@@ -7,8 +7,6 @@ namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
 {
     public sealed class TriangleComponent : VertexComponent
     {
-        private Color color;
-
         public override Transform Transform { get; set; } =
             new Transform()
             {
@@ -19,9 +17,8 @@ namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
 
         public override VertexModel Model => TriangleModel.Shared.Model;
 
-        public TriangleComponent(Color triangleColor) 
+        public TriangleComponent() 
         {
-            color = triangleColor;
         }
 
         public override Task StartAsync(GL openGL, IWindow window)
@@ -33,7 +30,7 @@ namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
         {
             var currentTransform = Transform;
 
-            currentTransform.Rotation = new(((currentTransform.Rotation.X + 0.001f)), currentTransform.Rotation.Y, currentTransform.Rotation.Z, currentTransform.Rotation.W);
+            //currentTransform.Rotation = new(((currentTransform.Rotation.X + 0.001f)), currentTransform.Rotation.Y, currentTransform.Rotation.Z, currentTransform.Rotation.W);
             Transform = new Transform()
             {
                 Position = currentTransform.Position,

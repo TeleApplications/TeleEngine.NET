@@ -9,8 +9,8 @@ namespace TeleEngine.NET.Views.CustomViews.Scene
     {
         protected override IList<IComponent> Components { get; set; } = new List<IComponent>
         {
-            new TriangleComponent(Color.White),
-            new TriangleComponent(Color.White)
+            //new TriangleComponent(),
+            new TriangleComponent()
             {
                 Transform = new()
                 {
