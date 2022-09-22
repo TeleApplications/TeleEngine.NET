@@ -42,7 +42,7 @@ namespace TeleEngine.NET.Components.CameraComponenets
         //This is going to be moved into some static math helper class
         private Matrix4x4 CalculateModelMatrix() => Matrix4x4.CreateRotationX(CalculateDegreesToRadians(StaticTime)) * Matrix4x4.CreateRotationY(CalculateDegreesToRadians(StaticTime));
         private Matrix4x4 CalculateViewMatrix() => Matrix4x4.CreateLookAt(Transform.Position, Transform.Position + (Vector3.UnitZ * -1), Vector3.UnitY);
-        private Matrix4x4 CalculateProjectionMatrix() => Matrix4x4.CreatePerspectiveFieldOfView(FieldOfView, AspectRatio, 0.1f, FieldOfView * 1.5f);
+        private Matrix4x4 CalculateProjectionMatrix() => Matrix4x4.CreatePerspectiveFieldOfView(FieldOfView, AspectRatio, 0.5f, FieldOfView * 1.5f);
 
         private float CalculateDegreesToRadians(int degree) => MathF.PI / (180f * degree);
     }
