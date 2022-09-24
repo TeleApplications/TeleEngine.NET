@@ -1,7 +1,7 @@
 ﻿
 namespace TeleEngine.NET.Components.Vertices.DefaultModels.Models
 {
-    internal class UnknownModel : ModelFactory<UnknownModel>
+    internal sealed class UnknownModel : ModelFactory<UnknownModel>
     {
         public override VertexModel Model => new()
         {

@@ -2,7 +2,6 @@
 using System.Collections.Immutable;
 using System.Numerics;
 using TeleEngine.NET.Components.Vertices;
-using TeleEngine.NET.Components.Vertices.DefaultModels.Models;
 using TeleEngine.NET.Shaders;
 
 namespace TeleEngine.NET.Components.CameraComponenets
@@ -15,12 +14,17 @@ namespace TeleEngine.NET.Components.CameraComponenets
         public int FieldOfView { get; set; } = 90;
         public float AspectRatio { get; set; } = 1.25f;
 
-        public override VertexModel Model => UnknownModel.Shared.Model;
+        public override VertexModel Model => new()
+        {
+            Vertices = new float[] { 0f, 0f, 0f },
+            Indexes = new uint[] {0, 1, 2 }
+        };
+
         public override Transform Transform { get; set; } = new()
         {
-            Position = new Vector3(0, 0, 0),
+            Position = new Vector3(0, 0f, 0),
             Rotation = Quaternion.Identity,
-            Scale = 1
+            Scale = 1 
         };
 
         public Camera() 
@@ -28,22 +32,27 @@ namespace TeleEngine.NET.Components.CameraComponenets
             shaderResults =
                 ImmutableArray.Create
                 (
-                    new ShaderResult<Matrix4x4>("uModel", CalculateModelMatrix),
-                    new ShaderResult<Matrix4x4>("uView", CalculateViewMatrix),
-                    new ShaderResult<Matrix4x4>("uProjection", CalculateProjectionMatrix)
+                    new ShaderResult<Matrix4x4>("uProjection", () => MatrixHelper.CalculateProjectionMatrix(FieldOfView, AspectRatio)),
+                    new ShaderResult<Matrix4x4>("uView", () => MatrixHelper.CalculateViewMatrix(Transform)),
+                    new ShaderResult<Matrix4x4>("uModel", () => Matrix4x4.CreateRotationY(MatrixHelper.CalculateDegreesToRadians(25)))
                 );
+        }
+
+        private void UpdateShaders() 
+        {
+            for (int i = 0; i < shaderResults.Length; i++)
+            {
+                var shaderName = shaderResults[i].ShaderName;
+                var shaderValue = shaderResults[i].Result.Invoke();
+
+                vertexShader.SetValue(shaderName, shaderValue);
+            }
         }
 
         public override Task RenderAsync(GL openGL)
         {
+            UpdateShaders();
             return base.RenderAsync(openGL);
         }
-
-        //This is going to be moved into some static math helper class
-        private Matrix4x4 CalculateModelMatrix() => Matrix4x4.CreateRotationX(CalculateDegreesToRadians(StaticTime)) * Matrix4x4.CreateRotationY(CalculateDegreesToRadians(StaticTime));
-        private Matrix4x4 CalculateViewMatrix() => Matrix4x4.CreateLookAt(Transform.Position, Transform.Position + (Vector3.UnitZ * -1), Vector3.UnitY);
-        private Matrix4x4 CalculateProjectionMatrix() => Matrix4x4.CreatePerspectiveFieldOfView(FieldOfView, AspectRatio, 0.5f, FieldOfView * 1.5f);
-
-        private float CalculateDegreesToRadians(int degree) => MathF.PI / (180f * degree);
     }
 }

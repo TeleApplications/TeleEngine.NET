@@ -93,8 +93,9 @@ namespace TeleEngine.NET.Views
 
         public void Inicializate() 
         {
-            OpenGL.PolygonMode(GLEnum.FrontAndBack, GLEnum.Fill);
-            OpenGL.PatchParameter(GLEnum.PatchVertices, 3);
+            OpenGL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+            OpenGL.PatchParameter(PatchParameterName.PatchVertices, 3);
+            OpenGL.Enable(EnableCap.DepthTest);
 
             for (int i = 0; i < InicializationActions.Count; i++)
             {
@@ -105,7 +106,7 @@ namespace TeleEngine.NET.Views
         public async Task RenderViewAsync(double renderTime) 
         {
             DeltaTime = renderTime; 
-            OpenGL.Clear((uint)ClearBufferMask.ColorBufferBit);
+            OpenGL.Clear((uint)ClearBufferMask.ColorBufferBit | (uint)ClearBufferMask.DepthBufferBit);
 
             await RunComponentsRenderAction(async (IComponent currentComponent) =>
             {
@@ -116,7 +117,8 @@ namespace TeleEngine.NET.Views
 
                 unsafe 
                 {
-                    OpenGL.DrawElements(PrimitiveType.Triangles, 256, DrawElementsType.UnsignedInt, null);
+                    //OpenGL.DrawElements(PrimitiveType.Triangles, 256, DrawElementsType.UnsignedInt, null);
+                    OpenGL.DrawArrays(GLEnum.Triangles, 0, 256);
                 }
             });
         }

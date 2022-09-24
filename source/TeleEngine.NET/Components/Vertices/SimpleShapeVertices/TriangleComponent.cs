@@ -1,6 +1,5 @@
 ﻿using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
-using System.Drawing;
 using TeleEngine.NET.Components.Vertices.DefaultModels.Models;
 
 namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
@@ -10,7 +9,7 @@ namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
         public override Transform Transform { get; set; } =
             new Transform()
             {
-                Position = new(0.02f, 0, 1),
+                Position = new(0f, 0, 0),
                 Rotation = new(0f, 0f, 0f, 0f),
                 Scale = 1 
             };
@@ -30,7 +29,8 @@ namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
         {
             var currentTransform = Transform;
 
-            //currentTransform.Rotation = new(((currentTransform.Rotation.X + 0.001f)), currentTransform.Rotation.Y, currentTransform.Rotation.Z, currentTransform.Rotation.W);
+            //currentTransform.Position = new(((currentTransform.Position.X + 0.001f)), currentTransform.Position.Y + 0.001f, currentTransform.Position.Z);
+            //currentTransform.Rotation = new(((currentTransform.Rotation.X)), currentTransform.Rotation.Y + 0.001f, currentTransform.Rotation.Z, currentTransform.Rotation.W);
             Transform = new Transform()
             {
                 Position = currentTransform.Position,
