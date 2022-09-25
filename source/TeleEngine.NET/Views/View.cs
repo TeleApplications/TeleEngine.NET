@@ -94,7 +94,7 @@ namespace TeleEngine.NET.Views
         public void Inicializate() 
         {
             OpenGL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
-            OpenGL.PatchParameter(PatchParameterName.PatchVertices, 3);
+            OpenGL.PatchParameter(GLEnum.PatchVertices, 3);
             OpenGL.Enable(EnableCap.DepthTest);
 
             for (int i = 0; i < InicializationActions.Count; i++)
@@ -117,8 +117,8 @@ namespace TeleEngine.NET.Views
 
                 unsafe 
                 {
-                    //OpenGL.DrawElements(PrimitiveType.Triangles, 256, DrawElementsType.UnsignedInt, null);
-                    OpenGL.DrawArrays(GLEnum.Triangles, 0, 256);
+                    //OpenGL.DrawElements(PrimitiveType.Triangles, 32, DrawElementsType.UnsignedInt, null);
+                    OpenGL.DrawArrays(GLEnum.Lines, 0, 64);
                 }
             });
         }

@@ -24,7 +24,7 @@ namespace TeleEngine.NET.Components.CameraComponenets
         {
             Position = new Vector3(0, 0f, 0),
             Rotation = Quaternion.Identity,
-            Scale = 1 
+            Scale = 0.2f 
         };
 
         public Camera() 

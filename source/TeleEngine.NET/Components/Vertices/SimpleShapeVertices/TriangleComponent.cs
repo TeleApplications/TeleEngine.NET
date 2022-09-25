@@ -9,7 +9,7 @@ namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
         public override Transform Transform { get; set; } =
             new Transform()
             {
-                Position = new(0f, 0, 0),
+                Position = new(0f, 0f, 0),
                 Rotation = new(0f, 0f, 0f, 0f),
                 Scale = 1 
             };

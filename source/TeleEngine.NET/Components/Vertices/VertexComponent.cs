@@ -9,9 +9,12 @@ namespace TeleEngine.NET.Components.Vertices
 {
     public abstract class VertexComponent : IComponent
     {
+        private IWindow _window;
+
         public Color BaseColor { get; set; } = Color.Green;
 
         protected ShaderCore vertexShader { get; set; }
+
         protected virtual GLEnum vertexMode { get; } = GLEnum.Lines;
 
         public abstract Transform Transform { get; set; }
@@ -24,6 +27,7 @@ namespace TeleEngine.NET.Components.Vertices
         {
             var currentHandle = VertexHelper.CreatePointer(openGL, Model);
             Data = currentHandle;
+            _window = window;
             await InicializateAsync(openGL);
         }
 
@@ -33,10 +37,21 @@ namespace TeleEngine.NET.Components.Vertices
 
         public virtual async Task RenderAsync(GL openGL) 
         {
-            vertexShader.SetValue("uModel", Transform.MatrixTransform);
+            float currentSpeed = ((float)(_window.Time) * 0.05f);
+            var rotationX = Matrix4x4.CreateRotationX(currentSpeed * 10f);
+            var rotationY = Matrix4x4.CreateRotationY(currentSpeed * 10f);
+            var rotationZ = Matrix4x4.CreateRotationZ(currentSpeed * 10f);
+            vertexShader.SetValue("uModel", rotationX * rotationY * rotationZ);
+
+            var currentProjection = MatrixHelper.CalculateProjectionMatrix(90, 1f, 0.1f, 4000f);
+            vertexShader.SetValue("uProjection", currentProjection);
+            vertexShader.SetValue("uView", MatrixHelper.CalculateViewMatrix(Transform));
+
+
             var vectorColor = new Vector3(BaseColor.R, BaseColor.G, BaseColor.B);
             vertexShader.SetValue("vColor", vectorColor);
             openGL.UseProgram(vertexShader.ShaderHandle);
+
         }
 
 

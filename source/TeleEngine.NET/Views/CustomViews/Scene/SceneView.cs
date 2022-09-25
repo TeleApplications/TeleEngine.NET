@@ -1,6 +1,4 @@
 ﻿using Silk.NET.Windowing;
-using System.Drawing;
-using TeleEngine.NET.Components.CameraComponenets;
 using TeleEngine.NET.Components.Vertices.SimpleShapeVertices;
 using TeleEngine.NET.Intefaces;
 
@@ -14,9 +12,9 @@ namespace TeleEngine.NET.Views.CustomViews.Scene
             {
                 Transform = new()
                 {
-                    Position = new(0f, 0f, 0f),
+                    Position = new(0f, 0f, 2f),
                     Rotation = new(0f, 0f, 0f, 0f),
-                    Scale = 0.2f
+                    Scale = 1f
                 }
             },
             //new Camera()
