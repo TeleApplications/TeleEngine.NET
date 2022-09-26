@@ -12,14 +12,12 @@ namespace TeleEngine.NET.Views
         public IWindow ViewWindow { get; set; }
         public WindowOptions Options { get; set; }
 
-        protected virtual IList<IComponent> Components { get; set; }
+        protected virtual IList<IComponent> Components { get; set; } = new List<IComponent>();
 
         public async Task AddComponent<T>(T component) where T : IComponent
         {
             component.ComponenetId = Components.Count;
             Components.Add(component);
-            await component.StartAsync(OpenGL, ViewWindow);
-            await component.UpdateAsync(OpenGL);
         }
 
         public void RemoveComponent<T>(T component) where T : IComponent
@@ -88,7 +86,7 @@ namespace TeleEngine.NET.Views
             ViewWindow.Update += async(double doubleHolder) 
                 => await UpdateViewAsync();
 
-            ViewWindow.Run();
+            Task.Run(() => ViewWindow.Run());
         }
 
         public void Inicializate() 
@@ -115,11 +113,7 @@ namespace TeleEngine.NET.Views
                 vertexData = currentComponent.Data;
                 tickWatch.Start();
 
-                unsafe 
-                {
-                    //OpenGL.DrawElements(PrimitiveType.Triangles, 32, DrawElementsType.UnsignedInt, null);
-                    OpenGL.DrawArrays(GLEnum.Lines, 0, 64);
-                }
+                unsafe { OpenGL.DrawArrays(GLEnum.Triangles, 0, 128); }
             });
         }
 
@@ -154,6 +148,9 @@ namespace TeleEngine.NET.Views
 
         private async Task RunComponentsRenderAction(Func<IComponent, Task> renderFunction)
         {
+            if (Components.Count <= 0)
+                await Task.CompletedTask;
+
             for (int i = 0; i < Components.Count; i++)
             {
                 var currentInvoke = renderFunction.Invoke(Components[i]);

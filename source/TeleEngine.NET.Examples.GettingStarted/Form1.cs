@@ -5,7 +5,7 @@ namespace TeleEngine.NET.Examples.GettingStarted
 {
     public partial class Form1 : Form
     {
-        private SceneView currentScene;
+        private MainScene currentScene;
 
         public Form1()
         {
