@@ -15,6 +15,7 @@ in a low level form
 - [ ] Having at least two build in camera components
 - [ ] Create a proper documentation
 - [ ] Having any type of editor form (This is going to be a next project, because this repository is trying to keep code as low level as possible)
+- [ ] Create highly abstract input manager
 
 ### LICENSE
 > The [MIT license](https://github.com/TeleApplications/TeleEngine.NET/blob/master/LICENSE.txt) was choose due to [Silk.NET](https://github.com/dotnet/Silk.NET) license 
