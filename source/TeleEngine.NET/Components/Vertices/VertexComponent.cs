@@ -9,7 +9,7 @@ namespace TeleEngine.NET.Components.Vertices
 {
     public abstract class VertexComponent : IComponent
     {
-        private IWindow _window;
+        private IWindow? baseWindow;
 
         public Color BaseColor { get; set; } = Color.Green;
 
@@ -27,7 +27,7 @@ namespace TeleEngine.NET.Components.Vertices
         {
             var currentHandle = VertexHelper.CreatePointer(openGL, Model);
             Data = currentHandle;
-            _window = window;
+            baseWindow = window;
             await InicializateAsync(openGL);
         }
 
@@ -41,7 +41,6 @@ namespace TeleEngine.NET.Components.Vertices
             var rotationY = Matrix4x4.CreateRotationY(Transform.Rotation.Y * 10f);
             var rotationZ = Matrix4x4.CreateRotationZ(Transform.Rotation.Z * 10f);
             vertexShader.SetValue("uModel", rotationX * rotationY * rotationZ);
-
 
             var currentProjection = MatrixHelper.CalculateProjectionMatrix(90, 1f, 0.1f, 4000f);
             vertexShader.SetValue("uProjection", currentProjection);

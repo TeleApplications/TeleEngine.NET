@@ -47,19 +47,18 @@ namespace TeleEngine.NET.Views
         }
     }
 
-    public abstract partial class View : IRenderable
+    public abstract partial class View : IRenderable, IDisposable
     {
         private VertexData vertexData;
+        private Stopwatch lastTickWatch = new();
+
+        protected Stopwatch tickWatch = new();
+
         private static WindowOptions defaultOption = new()
             {
                 Size = new(800, 600),
                 Title = "DefaultTitle",
             };
-
-        protected Stopwatch tickWatch = new();
-
-        private bool isRunning = true;
-        private Stopwatch lastTickWatch = new();
 
         public GL OpenGL { get; set; }
         public double DeltaTime { get; private set; }
@@ -158,13 +157,9 @@ namespace TeleEngine.NET.Views
             }
         }
 
-        public async Task StopViewAsync() 
+        public void Dispose() 
         {
-            var objectHolder = new object();
-            lock (objectHolder) 
-            {
-                isRunning = false;
-            }
+            OpenGL.Dispose();
         }
     }
 }

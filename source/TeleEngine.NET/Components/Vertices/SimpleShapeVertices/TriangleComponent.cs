@@ -29,8 +29,8 @@ namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
         {
             var currentTransform = Transform;
 
-            float rotationIndex = ((float)ComponenetId / 1000);
-            currentTransform.Rotation = new(((currentTransform.Rotation.X + rotationIndex)), currentTransform.Rotation.Y + 0.001f, currentTransform.Rotation.Z, currentTransform.Rotation.W);
+            float rotationIndex = ((float)(ComponenetId + 1) / 10000);
+            currentTransform.Rotation = new(((currentTransform.Rotation.X + rotationIndex)), currentTransform.Rotation.Y + rotationIndex, currentTransform.Rotation.Z, currentTransform.Rotation.W);
             Transform = new Transform()
             {
                 Position = currentTransform.Position,
