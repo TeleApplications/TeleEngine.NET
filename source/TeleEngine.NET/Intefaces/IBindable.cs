@@ -2,6 +2,6 @@
 {
     public interface IBindable
     {
-        public async Task BindAsync() { }
+        public async Task BindAsync() { return Task.CompletedTask; }
     }
 }
