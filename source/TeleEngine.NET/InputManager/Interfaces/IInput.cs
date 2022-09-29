@@ -1,11 +1,12 @@
 ﻿using Silk.NET.GLFW;
+using System.Collections.Immutable;
 
 namespace TeleEngine.NET.InputManager.Interfaces
 {
     public interface IInput
     {
-        public ReadOnlyMemory<uint> ValidKeys { get; }
+        public ImmutableArray<int> ValidKeys { get; }
 
-        public async Task<uint> GetCurrentKeyAsync() { return 0; }
+        public async Task<Keys> GetCurrentKeyAsync() { return 0; }
     }
 }
