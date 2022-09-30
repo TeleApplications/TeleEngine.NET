@@ -3,6 +3,7 @@ using Silk.NET.Windowing;
 using System.Collections.Immutable;
 using TeleEngine.NET.InputManager.Interfaces;
 using TeleEngine.NET.SharedObjects.Attributes;
+using TeleEngine.NET.Views;
 
 namespace TeleEngine.NET.InputManager.Inputs
 {
@@ -11,17 +12,12 @@ namespace TeleEngine.NET.InputManager.Inputs
     [Shared(typeof(KeyboardInput))]
     public sealed class KeyboardInput : IInput
     {
-        private WindowState _windowState;
+        private WindowState _windowState => View.CurrentViewState;
         private int currentKey;
 
         public bool IsRecieving { get; private set; } = false;
         public ImmutableArray<int> ValidKeys =>
             ImmutableArray.Create(typeof(Keys).GetEnumValues() as int[]);
-
-        public KeyboardInput(WindowState windowState) 
-        {
-            _windowState = windowState;
-        }
 
         public async Task<Keys> GetCurrentKeyAsync() 
         {

@@ -8,35 +8,42 @@ namespace TeleEngine.NET.SharedObjects
 
     public static class Shared
     {
-        public static ImmutableArray<SharedAttribute> SharedAttributes =
+        public static ImmutableArray<SharedAttribute> SharedAttributes =>
             ImmutableArray.Create
             (
-                Assembly.GetExecutingAssembly().GetCustomAttributes<SharedAttribute>().ToArray()
-            );
+                AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(n => n.GetTypes()
+                .Where(t => t.GetCustomAttributes<SharedAttribute>(true).Any()))
+                .Select(n => n.GetCustomAttribute<SharedAttribute>()).ToArray()
+            )!;
+
         private static ReadOnlyMemory<SharedInstanceHolder> sharedObjects;
-        private static ReadOnlyMemory<byte[]> objectsTypes =>
-            SharedAttributes.Select(n => n.SharedType.GUID.ToByteArray()).ToArray();
+        private static ReadOnlyMemory<int> objectsTypes =>
+            SharedAttributes.Select(n => n.SharedId).ToArray();
 
         public static T? GetInstance<T>() 
         {
+            var sharedAttribute = typeof(T).GetCustomAttribute<SharedAttribute>();
+            if (sharedAttribute is null)
+                throw new Exception($"Class {nameof(T)} didn't have any {nameof(SharedAttribute)}");
+
             if (sharedObjects.IsEmpty)
                 sharedObjects = CreateSharedInstances();
 
-            var typeId = typeof(T).GUID.ToByteArray().AsMemory();
-            int index = FindInstanceIndex(typeId);
+            int index = FindInstanceIndex(sharedAttribute.SharedId);
             return index != objectsTypes.Length ? (T)sharedObjects.Span[index].Instance : default;
         }
 
-        private static int FindInstanceIndex(ReadOnlyMemory<byte> typeId) 
+        private static int FindInstanceIndex(int typeId) 
         {
-            var typeVector = new Vector<byte>(typeId.Span);
+            var typeVector = new Vector<int>(typeId);
 
-            int vectorSize = Vector<byte>.Count;
-            int difference = objectsTypes.Length - vectorSize;
+            int vectorSize = Vector<int>.Count;
+            int difference = Math.Abs(objectsTypes.Length - vectorSize);
 
             for (int i = 0; i < difference; i+=vectorSize)
             {
-                var currentVector = new Vector<byte>(objectsTypes.Span[i]);
+                var currentVector = new Vector<int>(objectsTypes.Span[i]);
                 if (Vector.EqualsAll(typeVector, currentVector))
                     return i;
             }
