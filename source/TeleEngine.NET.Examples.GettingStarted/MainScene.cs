@@ -12,7 +12,7 @@ namespace TeleEngine.NET.Examples.GettingStarted
         public MainScene(WindowOptions options) : base(options)
         {
             float aspectRatio = options.Size.X / options.Size.Y;
-            Task.Run(async () => await SpawnObjects<TestComponent>(25, (int index) =>
+            Task.Run(async () => await SpawnObjects<TestComponent>(5, (int index) =>
             new Transform()
             {
                 Position = new Vector3(-aspectRatio + ((int)(index / (MathF.Round(index / 7) + 1))), -5f + (MathF.Round(index / 5)), 10),

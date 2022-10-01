@@ -1,6 +1,7 @@
 ﻿using Silk.NET.GLFW;
 using Silk.NET.Windowing;
 using System.Collections.Immutable;
+using System.Numerics;
 using TeleEngine.NET.InputManager.Interfaces;
 using TeleEngine.NET.SharedObjects.Attributes;
 using TeleEngine.NET.Views;
@@ -12,41 +13,45 @@ namespace TeleEngine.NET.InputManager.Inputs
     [Shared(typeof(KeyboardInput))]
     public sealed class KeyboardInput : IInput
     {
+        private int vectorDifference;
         private WindowState _windowState => View.CurrentViewState;
-        private int currentKey;
 
-        public bool IsRecieving { get; private set; } = false;
         public ImmutableArray<int> ValidKeys =>
             ImmutableArray.Create(typeof(Keys).GetEnumValues() as int[]);
 
-        public async Task<Keys> GetCurrentKeyAsync() 
+        public async Task<bool> GetCurrentKeyStateAsync(Keys key)
         {
-            if (!IsRecieving)
-                IsRecieving = await StartRecievingKeys();
-            return (Keys)currentKey;
+            if (_windowState == WindowState.Minimized)
+                return false;
+
+            int keyIndex = (int)key;
+            return IsInputValid(keyIndex) ?
+                InteropHelper.GetAsyncKeyState(keyIndex) != 0 : false;
         }
 
-        private async Task<bool> StartRecievingKeys() 
+        public bool IsInputValid(int inputKey) 
         {
-            IsRecieving = true;
-            while (_windowState != WindowState.Minimized) 
+            int vectorCount = Vector<int>.Count;
+            if (vectorDifference == 0)
+                vectorDifference = ValidKeys.Length - vectorCount;
+
+            var inputVector = new Vector<int>(inputKey);
+            var keysArray = ValidKeys.ToArray();
+
+            for (int i = 0; i < vectorDifference; i += vectorCount) 
             {
-                currentKey = await FindActiveKey();
+                var keyVector = new Vector<int>(keysArray, i);
+                if (Vector.EqualsAny(inputVector, keyVector))
+                    return true;
+            }
+
+            for (int i = vectorDifference; i < vectorCount; i++)
+            {
+                var currentKey = keysArray[i];
+                if (inputKey == currentKey)
+                    return true;
             }
             return false;
-        }
-
-        private async Task<int> FindActiveKey() 
-        {
-            for (int i = 0; i < ValidKeys.Length; i++)
-            {
-                int currentKey = ValidKeys[i];
-                var currentState = await Task.Run(() => InteropHelper.GetAsyncKeyState(currentKey));
-
-                if (currentState != 0)
-                    return currentKey;
-            }
-            return (int)Keys.Unknown;
         }
     }
 }

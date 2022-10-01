@@ -41,9 +41,11 @@ namespace TeleEngine.NET.SharedObjects
             int vectorSize = Vector<int>.Count;
             int difference = Math.Abs(objectsTypes.Length - vectorSize);
 
+
+            var objectsArray = objectsTypes.Span.ToArray();
             for (int i = 0; i < difference; i+=vectorSize)
             {
-                var currentVector = new Vector<int>(objectsTypes.Span[i]);
+                var currentVector = new Vector<int>(objectsArray, i);
                 if (Vector.EqualsAll(typeVector, currentVector))
                     return i;
             }

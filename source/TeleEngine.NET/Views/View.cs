@@ -79,7 +79,7 @@ namespace TeleEngine.NET.Views
                 currentOpenGL.Enable(GLEnum.DepthTest);
             }));
             ViewWindow = Window.Create(Options);
-            CurrentViewState = ViewWindow.WindowState;
+            //CurrentViewState = ViewWindow.WindowState;
 
             ViewWindow.Load += async() 
                 => await StartViewAsync();
@@ -127,7 +127,6 @@ namespace TeleEngine.NET.Views
                 await currentComponent.StartAsync(OpenGL, ViewWindow);
                 vertexData = currentComponent.Data;
                 tickWatch.Start();
-                OpenGL.Flush();
             });
         }
 

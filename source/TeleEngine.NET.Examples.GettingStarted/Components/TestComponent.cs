@@ -14,7 +14,7 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
 {
     internal sealed class TestComponent : VertexComponent
     {
-        private static KeyboardInput keyboardState = Shared.GetInstance<KeyboardInput>()!;
+        private static KeyboardInput keyboardState = new();
 
         public override Transform Transform { get; set; } =
             new()
@@ -25,16 +25,18 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
             };
         public override VertexModel Model => TriangleModel.Shared.Model;
 
+        public TestComponent() 
+        {
+        }
         public override async Task UpdateAsync(GL openGL)
         {
-            var currentKey = await Task.Run(() => keyboardState.GetCurrentKeyAsync());
-            if (currentKey == Silk.NET.GLFW.Keys.W)
+            if (await keyboardState.GetCurrentKeyStateAsync(Silk.NET.GLFW.Keys.W))
                 Transform = new() { Position = Transform.Position, Rotation = new(Transform.Rotation.X + 0.01f, Transform.Rotation.Y, Transform.Rotation.Z, Transform.Rotation.W), Scale = Transform.Scale };
-            if (currentKey == Silk.NET.GLFW.Keys.S)
+            if (await keyboardState.GetCurrentKeyStateAsync(Silk.NET.GLFW.Keys.S))
                 Transform = new() { Position = Transform.Position, Rotation = new(Transform.Rotation.X - 0.01f, Transform.Rotation.Y, Transform.Rotation.Z, Transform.Rotation.W), Scale = Transform.Scale };
-            if (currentKey == Silk.NET.GLFW.Keys.A)
+            if (await keyboardState.GetCurrentKeyStateAsync(Silk.NET.GLFW.Keys.A))
                 Transform = new() { Position = Transform.Position, Rotation = new(Transform.Rotation.X, Transform.Rotation.Y + 0.01f, Transform.Rotation.Z, Transform.Rotation.W), Scale = Transform.Scale };
-            if (currentKey == Silk.NET.GLFW.Keys.S)
+            if (await keyboardState.GetCurrentKeyStateAsync(Silk.NET.GLFW.Keys.D))
                 Transform = new() { Position = Transform.Position, Rotation = new(Transform.Rotation.X, Transform.Rotation.Y - 0.01f, Transform.Rotation.Z, Transform.Rotation.W), Scale = Transform.Scale };
         }
     }

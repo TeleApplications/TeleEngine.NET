@@ -53,14 +53,16 @@ namespace TeleEngine.NET.Shaders
                 _openGL.Uniform1(uniformLocation, floatValue);
         }
 
-        public unsafe async Task BindAsync()
+        public async Task BindAsync()
         {
             shaderHandler = new
                 (
-                    GetShaderHandleAsync(_vertexPath, ShaderType.VertexShader).Result,
-                    GetShaderHandleAsync(_fragmentPath, ShaderType.FragmentShader).Result
+                    await GetShaderHandleAsync(_vertexPath, ShaderType.VertexShader),
+                    await GetShaderHandleAsync(_fragmentPath, ShaderType.FragmentShader)
                 );
 
+            unsafe 
+            {
             _openGL.AttachShader(ShaderHandle, shaderHandler.VertexHandle);
             _openGL.AttachShader(ShaderHandle, shaderHandler.FragmentHandle);
             _openGL.LinkProgram(ShaderHandle);
@@ -68,6 +70,7 @@ namespace TeleEngine.NET.Shaders
 
             DetachShaders(shaderHandler.VertexHandle, shaderHandler.FragmentHandle);
             _openGL.EnableVertexAttribArray(0);
+            }
         }
 
         public void DetachShaders(params uint[] shaderHandles)
