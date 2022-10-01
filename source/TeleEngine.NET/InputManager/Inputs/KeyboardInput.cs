@@ -19,7 +19,7 @@ namespace TeleEngine.NET.InputManager.Inputs
         public ImmutableArray<int> ValidKeys =>
             ImmutableArray.Create(typeof(Keys).GetEnumValues() as int[]);
 
-        public async Task<bool> GetCurrentKeyStateAsync(Keys key)
+        public bool GetCurrentKeyState(Keys key)
         {
             if (_windowState == WindowState.Minimized)
                 return false;

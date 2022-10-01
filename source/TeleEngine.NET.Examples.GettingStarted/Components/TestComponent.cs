@@ -30,13 +30,13 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
         }
         public override async Task UpdateAsync(GL openGL)
         {
-            if (await keyboardState.GetCurrentKeyStateAsync(Silk.NET.GLFW.Keys.W))
+            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.W))
                 Transform = new() { Position = Transform.Position, Rotation = new(Transform.Rotation.X + 0.01f, Transform.Rotation.Y, Transform.Rotation.Z, Transform.Rotation.W), Scale = Transform.Scale };
-            if (await keyboardState.GetCurrentKeyStateAsync(Silk.NET.GLFW.Keys.S))
+            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.S))
                 Transform = new() { Position = Transform.Position, Rotation = new(Transform.Rotation.X - 0.01f, Transform.Rotation.Y, Transform.Rotation.Z, Transform.Rotation.W), Scale = Transform.Scale };
-            if (await keyboardState.GetCurrentKeyStateAsync(Silk.NET.GLFW.Keys.A))
+            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.A))
                 Transform = new() { Position = Transform.Position, Rotation = new(Transform.Rotation.X, Transform.Rotation.Y + 0.01f, Transform.Rotation.Z, Transform.Rotation.W), Scale = Transform.Scale };
-            if (await keyboardState.GetCurrentKeyStateAsync(Silk.NET.GLFW.Keys.D))
+            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.D))
                 Transform = new() { Position = Transform.Position, Rotation = new(Transform.Rotation.X, Transform.Rotation.Y - 0.01f, Transform.Rotation.Z, Transform.Rotation.W), Scale = Transform.Scale };
         }
     }

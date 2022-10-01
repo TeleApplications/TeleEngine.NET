@@ -7,7 +7,7 @@ namespace TeleEngine.NET.InputManager.Interfaces
     {
         public ImmutableArray<int> ValidKeys { get; }
 
-        public async Task<bool> GetCurrentKeyStateAsync(Keys key) { return false; }
+        public bool GetCurrentKeyState(Keys key) { return false; }
         public bool IsInputValid(int inputKey);
     }
 }
