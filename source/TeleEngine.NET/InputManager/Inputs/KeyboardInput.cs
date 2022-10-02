@@ -11,13 +11,16 @@ namespace TeleEngine.NET.InputManager.Inputs
     //This is going to a multiplaform implementation, however it will be done until
     //fully working windows platform
     [Shared(typeof(KeyboardInput))]
-    public sealed class KeyboardInput : IInput
+    public sealed class KeyboardInput : IInput<Keys>
     {
         private int vectorDifference;
-        private WindowState _windowState => View.CurrentViewState;
+        private WindowState _windowState => View.CurrentViewWindow.WindowState;
 
-        public ImmutableArray<int> ValidKeys =>
-            ImmutableArray.Create(typeof(Keys).GetEnumValues() as int[]);
+        public ImmutableArray<int> ValidKeys { get; set; } =
+            ImmutableArray.Create
+            (
+                typeof(Keys).GetEnumValues() as int[]
+            );
 
         public bool GetCurrentKeyState(Keys key)
         {

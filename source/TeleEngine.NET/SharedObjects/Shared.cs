@@ -39,7 +39,7 @@ namespace TeleEngine.NET.SharedObjects
             var typeVector = new Vector<int>(typeId);
 
             int vectorSize = Vector<int>.Count;
-            int difference = Math.Abs(objectsTypes.Length - vectorSize);
+            int difference = objectsTypes.Length - vectorSize;
 
 
             var objectsArray = objectsTypes.Span.ToArray();
@@ -50,9 +50,10 @@ namespace TeleEngine.NET.SharedObjects
                     return i;
             }
 
-            for (int i = difference; i < vectorSize; i++)
+            int defaultDifference = (difference + Math.Abs(difference)) / 2;
+            for (int i = defaultDifference; i < objectsArray.Length; i++)
             {
-                if (Array.Equals(typeId, objectsTypes.Span[i]))
+                if (typeId == objectsArray[i])
                     return i;
             }
             return objectsTypes.Length;

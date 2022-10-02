@@ -9,7 +9,7 @@ namespace TeleEngine.NET.Views
 {
     public abstract partial class View : Intefaces.IView
     {
-        public static WindowState CurrentViewState { get; private set; }
+        public static IWindow CurrentViewWindow  { get; private set; }
 
         public IWindow ViewWindow { get; set; }
         public WindowOptions Options { get; set; }
@@ -79,7 +79,7 @@ namespace TeleEngine.NET.Views
                 currentOpenGL.Enable(GLEnum.DepthTest);
             }));
             ViewWindow = Window.Create(Options);
-            //CurrentViewState = ViewWindow.WindowState;
+            CurrentViewWindow = ViewWindow;
 
             ViewWindow.Load += async() 
                 => await StartViewAsync();
