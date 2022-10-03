@@ -1,12 +1,12 @@
 ﻿
 namespace TeleEngine.NET.Shaders
 {
-    internal sealed class ShaderResult<T>
+    public sealed class ShaderResult<T, TOutput>
     {
         public string ShaderName { get; }
-        public Func<T> Result { get; }
+        public Func<T, TOutput> Result { get; }
 
-        public ShaderResult(string shaderName, Func<T> result) 
+        public ShaderResult(string shaderName, Func<T, TOutput> result) 
         {
             ShaderName = shaderName;
             Result = result;

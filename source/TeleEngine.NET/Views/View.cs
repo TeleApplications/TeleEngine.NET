@@ -2,6 +2,7 @@
 using Silk.NET.Windowing;
 using System.Diagnostics;
 using System.Numerics;
+using TeleEngine.NET.Components.CameraComponenets.Interfaces;
 using TeleEngine.NET.Components.Vertices;
 using TeleEngine.NET.Intefaces;
 
@@ -63,6 +64,8 @@ namespace TeleEngine.NET.Views
             };
 
         public GL OpenGL { get; set; }
+        public abstract ICamera Camera { get; set; }
+
         public double DeltaTime { get; private set; }
         public long TickDifference { get; protected set; } = 0;
 
@@ -110,7 +113,7 @@ namespace TeleEngine.NET.Views
 
             await RunComponentsRenderAction(async (IComponent currentComponent) =>
             {
-                await currentComponent.RenderAsync(OpenGL);
+                await currentComponent.RenderAsync(OpenGL, Camera);
                 OpenGL.BindVertexArray(vertexData.VertexBufferPointer);
                 vertexData = currentComponent.Data;
                 tickWatch.Start();
@@ -134,7 +137,7 @@ namespace TeleEngine.NET.Views
         {
             ViewWindow.Title = $"{TickDifference}";
             await RunComponentsRenderAction(async (IComponent currentComponent) 
-               => await currentComponent.UpdateAsync(OpenGL));
+               => await currentComponent.UpdateAsync(OpenGL, Camera));
 
             TickDifference = CalculateTickDifference();
             lastTickWatch = tickWatch;

@@ -6,15 +6,14 @@ using TeleEngine.NET.Components.Vertices;
 using TeleEngine.NET.Components.Vertices.DefaultModels.Models;
 using TeleEngine.NET.InputManager.Inputs;
 using TeleEngine.NET.SharedObjects;
-using TeleEngine.NET.Views;
 
 namespace TeleEngine.NET.Examples.GettingStarted.Components
 {
-    internal sealed class TestComponent : VertexComponent
+    internal sealed class CameraComponent : VertexComponent
     {
         private static KeyboardInput keyboardState = Shared.GetInstance<KeyboardInput>()!;
-        private static MouseInput mouseState = Shared.GetInstance<MouseInput>()!;
 
+        public override VertexModel Model => TriangleModel.Shared.Model;
         public override Transform Transform { get; set; } =
             new()
             {
@@ -22,25 +21,20 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
                 Rotation = System.Numerics.Quaternion.Identity,
                 Scale = 1.25f
             };
-        public override VertexModel Model => TriangleModel.Shared.Model;
 
-        public TestComponent() 
+        public override Task UpdateAsync(GL openGL, ICamera camera)
         {
-        }
-        public override async Task UpdateAsync(GL openGL, ICamera camera)
-        {
-            var mousePosition = mouseState.CalculateRelativeMousePosition();
-            MainScene.CurrentViewWindow.Title = $"X: {mousePosition.X} Y: {mousePosition.Y}";
-            Transform = new() { Position = new Vector3(-mousePosition.X, mousePosition.Y, Transform.Position.Z), Rotation = Transform.Rotation, Scale = Transform.Scale };
 
-            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.D))
+            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.R))
                 camera.Transform = new() { Position = new(camera.Transform.Position.X + 0.01f, camera.Transform.Position.Y, camera.Transform.Position.Z), Rotation = camera.Transform.Rotation, Scale = camera.Transform.Scale };
-            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.A))
+            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.L))
                 camera.Transform = new() { Position = new(camera.Transform.Position.X - 0.01f, camera.Transform.Position.Y, camera.Transform.Position.Z), Rotation = camera.Transform.Rotation, Scale = camera.Transform.Scale };
             if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.W))
-                camera.Transform = new() { Position = new(camera.Transform.Position.X, camera.Transform.Position.Y, camera.Transform.Position.Z + 0.01f), Rotation = camera.Transform.Rotation, Scale = camera.Transform.Scale };
+                camera.Transform = new() { Position = new(camera.Transform.Position.Y + 0.01f, camera.Transform.Position.Y, camera.Transform.Position.Z), Rotation = camera.Transform.Rotation, Scale = camera.Transform.Scale };
             if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.S))
-                camera.Transform = new() { Position = new(camera.Transform.Position.X, camera.Transform.Position.Y, camera.Transform.Position.Z - 0.01f), Rotation = camera.Transform.Rotation, Scale = camera.Transform.Scale };
+                camera.Transform = new() { Position = new(camera.Transform.Position.Y - 0.01f, camera.Transform.Position.Y, camera.Transform.Position.Z), Rotation = camera.Transform.Rotation, Scale = camera.Transform.Scale };
+
+            return base.UpdateAsync(openGL, camera);
         }
     }
 }

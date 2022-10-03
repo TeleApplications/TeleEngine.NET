@@ -66,10 +66,10 @@ namespace TeleEngine.NET.InputManager.Inputs
             var xValue = (CalculateSqrtIndex(indexVector.X) - Math.Abs(indexVector.X - 1));
             var yValue = (CalculateSqrtIndex(indexVector.Y) - Math.Abs(indexVector.Y - 1));
 
-            int xTimesValue = (int)(CalculateSqrtIndex(xValue));
-            int yTimesValue = (int)(CalculateSqrtIndex(yValue));
+            int xResult = (int)(CalculateSqrtIndex(xValue));
+            int yResult = (int)(CalculateSqrtIndex(yValue));
 
-            return xTimesValue * yTimesValue;
+            return xResult * yResult;
         }
 
         private float CalculateSqrtIndex(float value) => (value + (MathF.Abs(value))) / 2;

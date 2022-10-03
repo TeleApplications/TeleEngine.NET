@@ -1,6 +1,7 @@
 ﻿using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using TeleEngine.NET.Components;
+using TeleEngine.NET.Components.CameraComponenets.Interfaces;
 using TeleEngine.NET.Components.Vertices;
 
 namespace TeleEngine.NET.Intefaces
@@ -16,8 +17,8 @@ namespace TeleEngine.NET.Intefaces
 
         public async Task StartAsync(GL openGL, IWindow window) { }
 
-        public async Task UpdateAsync(GL openGL) { }
+        public async Task UpdateAsync(GL openGL, ICamera camera) { }
 
-        public async Task RenderAsync(GL openGL) { }
+        public async Task RenderAsync(GL openGL, ICamera camera) { }
     }
 }

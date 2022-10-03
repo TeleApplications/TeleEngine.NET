@@ -2,6 +2,7 @@
 using Silk.NET.Windowing;
 using System.Drawing;
 using System.Numerics;
+using TeleEngine.NET.Components.CameraComponenets.Interfaces;
 using TeleEngine.NET.Intefaces;
 using TeleEngine.NET.Shaders;
 
@@ -31,25 +32,22 @@ namespace TeleEngine.NET.Components.Vertices
             await InicializateAsync(openGL);
         }
 
-        public virtual async Task UpdateAsync(GL openGL)
+        public virtual async Task UpdateAsync(GL openGL, ICamera camera)
         {
         }
 
-        public virtual async Task RenderAsync(GL openGL) 
+        public virtual async Task RenderAsync(GL openGL, ICamera camera) 
         {
+            vertexShader.SetValues(camera, camera.ShaderResults);
+
             var rotationX = Matrix4x4.CreateRotationX(Transform.Rotation.X * 10f);
             var rotationY = Matrix4x4.CreateRotationY(Transform.Rotation.Y * 10f);
             var rotationZ = Matrix4x4.CreateRotationZ(Transform.Rotation.Z * 10f);
             vertexShader.SetValue("uModel", rotationX * rotationY * rotationZ);
 
-            var currentProjection = MatrixHelper.CalculateProjectionMatrix(90, 1f, 0.1f, 4000f);
-            vertexShader.SetValue("uProjection", currentProjection);
-            vertexShader.SetValue("uView", MatrixHelper.CalculateViewMatrix(Transform));
-
             var vectorColor = new Vector3(BaseColor.R, BaseColor.G, BaseColor.B);
             vertexShader.SetValue("vColor", vectorColor);
             openGL.UseProgram(vertexShader.ShaderHandle);
-
         }
 
 

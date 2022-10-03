@@ -1,5 +1,6 @@
 ﻿using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
+using TeleEngine.NET.Components.CameraComponenets.Interfaces;
 using TeleEngine.NET.Components.Vertices.DefaultModels.Models;
 
 namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
@@ -25,7 +26,7 @@ namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
             return base.StartAsync(openGL, window);
         }
 
-        public override Task UpdateAsync(GL openGL)
+        public override Task UpdateAsync(GL openGL, ICamera camera)
         {
             var currentTransform = Transform;
 
@@ -38,7 +39,7 @@ namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
                 Scale = currentTransform.Scale
             };
 
-            return base.UpdateAsync(openGL);
+            return base.UpdateAsync(openGL, camera);
         }
     } 
 }

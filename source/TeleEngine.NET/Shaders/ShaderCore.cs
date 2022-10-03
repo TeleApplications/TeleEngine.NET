@@ -1,4 +1,5 @@
 ﻿using Silk.NET.OpenGL;
+using System.Collections.Immutable;
 using System.Numerics;
 using TeleEngine.NET.Components.Vertices;
 using TeleEngine.NET.Intefaces;
@@ -51,6 +52,18 @@ namespace TeleEngine.NET.Shaders
                 _openGL.Uniform1(uniformLocation, doubleValue);
             if (value is float floatValue)
                 _openGL.Uniform1(uniformLocation, floatValue);
+        }
+
+        public void SetValues<T, TOutput>(T value, ImmutableArray<ShaderResult<T, TOutput>> shaderResults) 
+        {
+            for (int i = 0; i < shaderResults.Length; i++)
+            {
+                var currentValue = shaderResults[i];
+                string shaderName = currentValue.ShaderName;
+                TOutput shaderValue = currentValue.Result.Invoke(value);
+
+                SetValue(shaderName, shaderValue);
+            }
         }
 
         public async Task BindAsync()
