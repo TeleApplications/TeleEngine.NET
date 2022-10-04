@@ -29,7 +29,6 @@ namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
         public override Task UpdateAsync(GL openGL, ICamera camera)
         {
             var currentTransform = Transform;
-
             float rotationIndex = ((float)(ComponenetId + 1) / 10000);
             currentTransform.Rotation = new(((currentTransform.Rotation.X + rotationIndex)), currentTransform.Rotation.Y + rotationIndex, currentTransform.Rotation.Z, currentTransform.Rotation.W);
             Transform = new Transform()

@@ -31,16 +31,16 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
         {
             var mousePosition = mouseState.CalculateRelativeMousePosition();
             MainScene.CurrentViewWindow.Title = $"X: {mousePosition.X} Y: {mousePosition.Y}";
-            Transform = new() { Position = new Vector3(-mousePosition.X, mousePosition.Y, Transform.Position.Z), Rotation = Transform.Rotation, Scale = Transform.Scale };
+            //Transform = new() { Position = new Vector3(-mousePosition.X, mousePosition.Y, Transform.Position.Z), Rotation = Transform.Rotation, Scale = Transform.Scale };
 
-            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.D))
-                camera.Transform = new() { Position = new(camera.Transform.Position.X + 0.01f, camera.Transform.Position.Y, camera.Transform.Position.Z), Rotation = camera.Transform.Rotation, Scale = camera.Transform.Scale };
-            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.A))
-                camera.Transform = new() { Position = new(camera.Transform.Position.X - 0.01f, camera.Transform.Position.Y, camera.Transform.Position.Z), Rotation = camera.Transform.Rotation, Scale = camera.Transform.Scale };
-            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.W))
-                camera.Transform = new() { Position = new(camera.Transform.Position.X, camera.Transform.Position.Y, camera.Transform.Position.Z + 0.01f), Rotation = camera.Transform.Rotation, Scale = camera.Transform.Scale };
-            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.S))
-                camera.Transform = new() { Position = new(camera.Transform.Position.X, camera.Transform.Position.Y, camera.Transform.Position.Z - 0.01f), Rotation = camera.Transform.Rotation, Scale = camera.Transform.Scale };
+            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.I))
+                Transform = new() { Position = new(Transform.Position.X + 0.01f, Transform.Position.Y, Transform.Position.Z), Rotation = Transform.Rotation, Scale = Transform.Scale };
+            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.L))
+                Transform = new() { Position = new(Transform.Position.X - 0.01f, Transform.Position.Y, Transform.Position.Z), Rotation = Transform.Rotation, Scale = Transform.Scale };
+            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.J))
+                Transform = new() { Position = new(Transform.Position.X, Transform.Position.Y, Transform.Position.Z + 0.01f), Rotation = Transform.Rotation, Scale = Transform.Scale };
+            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.K))
+                Transform = new() { Position = new(Transform.Position.X, Transform.Position.Y, Transform.Position.Z - 0.01f), Rotation = Transform.Rotation, Scale = Transform.Scale };
         }
     }
 }
