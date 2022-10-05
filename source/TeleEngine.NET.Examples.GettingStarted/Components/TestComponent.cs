@@ -18,7 +18,7 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
         public override Transform Transform { get; set; } =
             new()
             {
-                Position = new(0, 0, 2),
+                Position = new(0, 0, 0),
                 Rotation = System.Numerics.Quaternion.Identity,
                 Scale = 1.25f
             };
@@ -27,6 +27,7 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
         public TestComponent() 
         {
         }
+
         public override async Task UpdateAsync(GL openGL, ICamera camera)
         {
             var mousePosition = mouseState.CalculateRelativeMousePosition();
@@ -41,6 +42,15 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
                 Transform = new() { Position = new(Transform.Position.X, Transform.Position.Y, Transform.Position.Z + 0.01f), Rotation = Transform.Rotation, Scale = Transform.Scale };
             if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.K))
                 Transform = new() { Position = new(Transform.Position.X, Transform.Position.Y, Transform.Position.Z - 0.01f), Rotation = Transform.Rotation, Scale = Transform.Scale };
+
+            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.D))
+                camera.Transform = new() { Position = new(camera.Transform.Position.X + 0.01f, camera.Transform.Position.Y, camera.Transform.Position.Z), Rotation = camera.Transform.Rotation, Scale = camera.Transform.Scale };
+            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.A))
+                camera.Transform = new() { Position = new(camera.Transform.Position.X - 0.01f, camera.Transform.Position.Y, camera.Transform.Position.Z), Rotation = camera.Transform.Rotation, Scale = camera.Transform.Scale };
+            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.W))
+                camera.Transform = new() { Position = new(camera.Transform.Position.X, camera.Transform.Position.Y, camera.Transform.Position.Z + 0.01f), Rotation = camera.Transform.Rotation, Scale = camera.Transform.Scale };
+            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.S))
+                camera.Transform = new() { Position = new(camera.Transform.Position.X, camera.Transform.Position.Y, camera.Transform.Position.Z - 0.01f), Rotation = camera.Transform.Rotation, Scale = camera.Transform.Scale };
         }
     }
 }

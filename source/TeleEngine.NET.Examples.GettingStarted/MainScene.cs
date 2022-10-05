@@ -15,7 +15,7 @@ namespace TeleEngine.NET.Examples.GettingStarted
 
         public MainScene(WindowOptions options) : base(options)
         {
-            Task.Run(async () => await AddComponent(new CameraComponent()));
+            //Task.Run(async () => await AddComponent(new CameraComponent()));
 
             float aspectRatio = options.Size.X / options.Size.Y;
             Task.Run(async () => await SpawnObjects<TestComponent>(1, (int index) =>

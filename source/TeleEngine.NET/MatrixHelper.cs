@@ -18,7 +18,7 @@ namespace TeleEngine.NET
         }
 
         public static Matrix4x4 CalculateViewMatrix(Transform transform) =>
-            Matrix4x4.CreateLookAt(transform.Position, transform.Position + (Vector3.UnitZ * -1), Vector3.UnitY);
+            Matrix4x4.CreateLookAt(transform.Position, (Vector3.UnitZ * -1), Vector3.UnitY);
         public static Matrix4x4 CalculateProjectionMatrix(int fieldOfView, float aspectRatio, float minDistance = 0.1f, float maxDistance = 100f) 
         {
             var fieldRadians = CalculateDegreesToRadians(fieldOfView);
