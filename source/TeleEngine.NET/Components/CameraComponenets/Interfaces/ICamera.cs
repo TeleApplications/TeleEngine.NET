@@ -8,9 +8,13 @@ namespace TeleEngine.NET.Components.CameraComponenets.Interfaces
     {
         public ImmutableArray<ShaderResult<ICamera, Matrix4x4>> ShaderResults { get; }
 
-
+        public CameraVectorData VectorData { get; }
         public Transform Transform { get; set; }
+
         public int FieldOfView { get; set; }
         public float AspectRatio { get; set; }
+
+        public int Pitch { get; set; }
+        public int Yaw { get; set; }
     }
 }
