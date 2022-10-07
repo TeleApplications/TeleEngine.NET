@@ -1,10 +1,12 @@
 ﻿using Silk.NET.OpenGL;
 using System.Numerics;
 using TeleEngine.NET.Components;
+using TeleEngine.NET.Components.CameraComponenets.Cameras;
 using TeleEngine.NET.Components.CameraComponenets.Interfaces;
 using TeleEngine.NET.Components.Vertices;
 using TeleEngine.NET.Components.Vertices.DefaultModels.Models;
 using TeleEngine.NET.InputManager.Inputs;
+using TeleEngine.NET.MathComponents.Vectors;
 using TeleEngine.NET.SharedObjects;
 
 namespace TeleEngine.NET.Examples.GettingStarted.Components
@@ -17,7 +19,7 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
         public override Transform Transform { get; set; } =
             new()
             {
-                Position = new(0, 0, 2),
+                Position = (Vector3D)Vector3.Zero,
                 Rotation = System.Numerics.Quaternion.Identity,
                 Scale = 1.25f
             };
@@ -30,14 +32,15 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
             if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.E))
                 rotationValue = -1;
 
-            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.D))
-                camera.Transform = new() { Position = new(camera.Transform.Position.X + 0.01f, camera.Transform.Position.Y, camera.Transform.Position.Z), Rotation = camera.Transform.Rotation, Scale = camera.Transform.Scale };
-            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.A))
-                camera.Transform = new() { Position = new(camera.Transform.Position.X - 0.01f, camera.Transform.Position.Y, camera.Transform.Position.Z), Rotation = camera.Transform.Rotation, Scale = camera.Transform.Scale };
             if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.W))
-                camera.Transform = new() { Position = new(camera.Transform.Position.X, camera.Transform.Position.Y, camera.Transform.Position.Z + 0.01f), Rotation = camera.Transform.Rotation, Scale = camera.Transform.Scale };
+                camera.Transform.Position += camera.VectorData.Front;
             if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.S))
-                camera.Transform = new() { Position = new(camera.Transform.Position.X, camera.Transform.Position.Y, camera.Transform.Position.Z - 0.01f), Rotation = camera.Transform.Rotation, Scale = camera.Transform.Scale };
+                camera.Transform.Position -= camera.VectorData.Front;
+
+            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.A))
+                camera.Transform.Position += (Vector3D)Vector3.Normalize(Vector3.Cross(camera.VectorData.Front, camera.VectorData.Up));
+            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.D))
+                camera.Transform.Position -= (Vector3D)Vector3.Normalize(Vector3.Cross(camera.VectorData.Front, camera.VectorData.Up));
 
             camera.Yaw += rotationValue;
             camera.Pitch -= rotationValue;

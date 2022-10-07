@@ -2,6 +2,7 @@
 using System.Net.Http.Headers;
 using System.Numerics;
 using TeleEngine.NET.Components.CameraComponenets.Interfaces;
+using TeleEngine.NET.MathComponents.Vectors;
 using TeleEngine.NET.Shaders;
 
 namespace TeleEngine.NET.Components.CameraComponenets.Cameras
@@ -21,7 +22,7 @@ namespace TeleEngine.NET.Components.CameraComponenets.Cameras
             CalculateVectorData();
         public Transform Transform { get; set; } = new()
         {
-            Position = Vector3.Zero,
+            Position = (Vector3D)Vector3.Zero,
             Rotation = Quaternion.Identity,
             Scale = 1f
         };
@@ -43,7 +44,17 @@ namespace TeleEngine.NET.Components.CameraComponenets.Cameras
                 Y = (MathF.Sin(pitchRadians)),
                 Z = (MathF.Cos(pitchRadians) * MathF.Sin(yawRadians)),
             };
-            return new CameraVectorData(Vector3.UnitY, Vector3.Normalize(frontVector));
+            return new CameraVectorData(CalculateUpDirection(), (Vector3D)Vector3.Normalize(frontVector));
+        }
+
+        private Vector3D CalculateUpDirection() 
+        {
+            Vector3 upDirection = VectorData.Up == Vector3.Zero ? new(0, 1, 0) : VectorData.Up;
+            var normalizedPosition = Vector3.Normalize(Transform.Position);
+
+            var vectorCross = Vector3.Cross(upDirection, normalizedPosition);
+            Vector3 rightDirection = Vector3.Normalize(vectorCross);
+            return (Vector3D)Vector3.Cross(normalizedPosition, rightDirection);
         }
     }
 }

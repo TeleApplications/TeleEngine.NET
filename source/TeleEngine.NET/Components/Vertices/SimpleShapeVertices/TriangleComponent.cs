@@ -1,7 +1,9 @@
 ﻿using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
+using System.Numerics;
 using TeleEngine.NET.Components.CameraComponenets.Interfaces;
 using TeleEngine.NET.Components.Vertices.DefaultModels.Models;
+using TeleEngine.NET.MathComponents.Vectors;
 
 namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
 {
@@ -10,7 +12,7 @@ namespace TeleEngine.NET.Components.Vertices.SimpleShapeVertices
         public override Transform Transform { get; set; } =
             new Transform()
             {
-                Position = new(0f, 0f, 0),
+                Position = (Vector3D)Vector3.Zero,
                 Rotation = new(0f, 0f, 0f, 0f),
                 Scale = 1 
             };
