@@ -19,6 +19,10 @@ namespace TeleEngine.NET.MathComponents.Vectors
             new(firstVector.X + secondVector.X, firstVector.Y + secondVector.Y, firstVector.Z + secondVector.Z);
         public static Vector3D operator -(Vector3D firstVector, Vector3D secondVector) =>
             new(firstVector.X - secondVector.X, firstVector.Y - secondVector.Y, firstVector.Z - secondVector.Z);
+        public static Vector3D operator *(Vector3D firstVector, Vector3D secondVector) =>
+            new(firstVector.X * secondVector.X, firstVector.Y * secondVector.Y, firstVector.Z * secondVector.Z);
+        public static Vector3D operator *(Vector3D firstVector, float value) =>
+            new(firstVector.X * value, firstVector.Y * value, firstVector.Z * value);
 
         public static implicit operator System.Numerics.Vector3(Vector3D vector) =>
             new(vector.X, vector.Y, vector.Z);

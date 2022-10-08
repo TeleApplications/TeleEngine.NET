@@ -26,24 +26,6 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
 
         public override Task UpdateAsync(GL openGL, ICamera camera)
         {
-            int rotationValue = 0;
-            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.Q)) 
-                rotationValue = 1;
-            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.E))
-                rotationValue = -1;
-
-            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.W))
-                camera.Transform.Position += camera.VectorData.Front;
-            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.S))
-                camera.Transform.Position -= camera.VectorData.Front;
-
-            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.A))
-                camera.Transform.Position += (Vector3D)Vector3.Normalize(Vector3.Cross(camera.VectorData.Front, camera.VectorData.Up));
-            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.D))
-                camera.Transform.Position -= (Vector3D)Vector3.Normalize(Vector3.Cross(camera.VectorData.Front, camera.VectorData.Up));
-
-            camera.Yaw += rotationValue;
-            camera.Pitch -= rotationValue;
             return base.UpdateAsync(openGL, camera);
         }
     }

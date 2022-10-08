@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Net.Http.Headers;
 using System.Numerics;
 using TeleEngine.NET.Components.CameraComponenets.Interfaces;
 using TeleEngine.NET.MathComponents.Vectors;
@@ -9,6 +8,8 @@ namespace TeleEngine.NET.Components.CameraComponenets.Cameras
 {
     public class PerespectiveCamera : ICamera
     {
+        private static readonly Vector3D DefaultVector = new(0, 0, 0);
+
         public ImmutableArray<ShaderResult<ICamera, Matrix4x4>> ShaderResults =>
             ImmutableArray.Create
             (
@@ -27,33 +28,35 @@ namespace TeleEngine.NET.Components.CameraComponenets.Cameras
             Scale = 1f
         };
 
-        public int FieldOfView { get; set; } = 90;
-        public float AspectRatio { get; set; } = 1.25f;
+        public int FieldOfView { get; set; } = 60;
+        public float AspectRatio { get; set; } = 1f;
 
-        public int Pitch { get; set; } = -45;
-        public int Yaw { get; set; } = 45;
+        public int Pitch { get; set; } = 0;
+        public int Yaw { get; set; } = -90;
 
         private CameraVectorData CalculateVectorData() 
         {
             float pitchRadians = MatrixHelper.CalculateDegreesToRadians(Pitch);
             float yawRadians = MatrixHelper.CalculateDegreesToRadians(Yaw);
 
-            Vector3 frontVector = new Vector3()
+            var frontVector = new Vector3()
             {
-                X = (MathF.Cos(pitchRadians) * MathF.Cos(yawRadians)),
+                X = (MathF.Cos(yawRadians) * MathF.Cos(pitchRadians)),
                 Y = (MathF.Sin(pitchRadians)),
-                Z = (MathF.Cos(pitchRadians) * MathF.Sin(yawRadians)),
+                Z = (MathF.Sin(yawRadians) * MathF.Cos(pitchRadians)),
             };
-            return new CameraVectorData(CalculateUpDirection(), (Vector3D)Vector3.Normalize(frontVector));
+            var upVector = CalculateUpDirection();
+            return new CameraVectorData((Vector3D)upVector, (Vector3D)frontVector);
         }
 
         private Vector3D CalculateUpDirection() 
         {
-            Vector3 upDirection = VectorData.Up == Vector3.Zero ? new(0, 1, 0) : VectorData.Up;
-            var normalizedPosition = Vector3.Normalize(Transform.Position);
+            var normalizedPosition = Vector3.Normalize(Vector3.Zero - Transform.Position);
+            var upDirection = Vector3.UnitY;
 
             var vectorCross = Vector3.Cross(upDirection, normalizedPosition);
             Vector3 rightDirection = Vector3.Normalize(vectorCross);
+            var result = Vector3.Cross(normalizedPosition, rightDirection);
             return (Vector3D)Vector3.Cross(normalizedPosition, rightDirection);
         }
     }

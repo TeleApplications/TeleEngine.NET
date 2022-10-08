@@ -17,6 +17,10 @@ namespace TeleEngine.NET.MathComponents.Vectors
             new(firstVector.X + secondVector.X, firstVector.Y + secondVector.Y);
         public static Vector2D operator -(Vector2D firstVector, IVector secondVector) =>
             new(firstVector.X - secondVector.X, firstVector.Y - secondVector.Y);
+        public static Vector2D operator *(Vector2D firstVector, IVector secondVector) =>
+            new(firstVector.X * secondVector.X, firstVector.Y * secondVector.Y);
+        public static Vector2D operator *(Vector2D firstVector, float value) =>
+            new(firstVector.X * value, firstVector.Y * value);
 
         public static implicit operator System.Numerics.Vector2(Vector2D vector) =>
             new(vector.X, vector.Y);

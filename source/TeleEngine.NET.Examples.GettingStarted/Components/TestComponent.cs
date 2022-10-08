@@ -1,6 +1,7 @@
 ﻿using Silk.NET.OpenGL;
 using System.Numerics;
 using TeleEngine.NET.Components;
+using TeleEngine.NET.Components.CameraComponenets.Cameras;
 using TeleEngine.NET.Components.CameraComponenets.Interfaces;
 using TeleEngine.NET.Components.Vertices;
 using TeleEngine.NET.Components.Vertices.DefaultModels.Models;
@@ -15,6 +16,8 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
     {
         private static KeyboardInput keyboardState = Shared.GetInstance<KeyboardInput>()!;
         private static MouseInput mouseState = Shared.GetInstance<MouseInput>()!;
+
+        public float Speed { get; set; } = 0.1f;
 
         public override Transform Transform { get; set; } =
             new()
@@ -42,17 +45,16 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
                 rotationValue = -1;
 
             if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.W))
-                camera.Transform.Position += camera.VectorData.Front;
+                camera.Transform.Position += camera.VectorData.Front * Speed;
             if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.S))
-                camera.Transform.Position -= camera.VectorData.Front;
+                camera.Transform.Position -= camera.VectorData.Front * Speed;
 
             if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.A))
-                camera.Transform.Position += (Vector3D)Vector3.Normalize(Vector3.Cross(camera.VectorData.Front, camera.VectorData.Up));
+                camera.Transform.Position += (Vector3D)(Vector3.Normalize(Vector3.Cross(camera.VectorData.Front, camera.VectorData.Up)) * Speed);
             if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.D))
-                camera.Transform.Position -= (Vector3D)Vector3.Normalize(Vector3.Cross(camera.VectorData.Front, camera.VectorData.Up));
+                camera.Transform.Position -= (Vector3D)Vector3.Normalize(Vector3.Cross(camera.VectorData.Front, camera.VectorData.Up)) * Speed;
 
             camera.Yaw += rotationValue;
-            camera.Pitch -= rotationValue;
         }
     }
 }
