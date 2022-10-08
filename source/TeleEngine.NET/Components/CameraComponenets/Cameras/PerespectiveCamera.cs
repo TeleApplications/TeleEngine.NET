@@ -8,8 +8,6 @@ namespace TeleEngine.NET.Components.CameraComponenets.Cameras
 {
     public class PerespectiveCamera : ICamera
     {
-        private static readonly Vector3D DefaultVector = new(0, 0, 0);
-
         public ImmutableArray<ShaderResult<ICamera, Matrix4x4>> ShaderResults =>
             ImmutableArray.Create
             (
@@ -31,8 +29,8 @@ namespace TeleEngine.NET.Components.CameraComponenets.Cameras
         public int FieldOfView { get; set; } = 60;
         public float AspectRatio { get; set; } = 1f;
 
-        public int Pitch { get; set; } = 0;
-        public int Yaw { get; set; } = -90;
+        public float Pitch { get; set; } = 0;
+        public float Yaw { get; set; } = -90;
 
         private CameraVectorData CalculateVectorData() 
         {
@@ -46,7 +44,7 @@ namespace TeleEngine.NET.Components.CameraComponenets.Cameras
                 Z = (MathF.Sin(yawRadians) * MathF.Cos(pitchRadians)),
             };
             var upVector = CalculateUpDirection();
-            return new CameraVectorData((Vector3D)upVector, (Vector3D)frontVector);
+            return new CameraVectorData(upVector, (Vector3D)frontVector);
         }
 
         private Vector3D CalculateUpDirection() 
@@ -56,7 +54,6 @@ namespace TeleEngine.NET.Components.CameraComponenets.Cameras
 
             var vectorCross = Vector3.Cross(upDirection, normalizedPosition);
             Vector3 rightDirection = Vector3.Normalize(vectorCross);
-            var result = Vector3.Cross(normalizedPosition, rightDirection);
             return (Vector3D)Vector3.Cross(normalizedPosition, rightDirection);
         }
     }

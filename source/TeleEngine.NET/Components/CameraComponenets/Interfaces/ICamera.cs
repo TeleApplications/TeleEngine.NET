@@ -14,7 +14,7 @@ namespace TeleEngine.NET.Components.CameraComponenets.Interfaces
         public int FieldOfView { get; set; }
         public float AspectRatio { get; set; }
 
-        public int Pitch { get; set; }
-        public int Yaw { get; set; }
+        public float Pitch { get; set; }
+        public float Yaw { get; set; }
     }
 }

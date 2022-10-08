@@ -39,7 +39,7 @@ namespace TeleEngine.NET.Components.Vertices
         public virtual async Task RenderAsync(GL openGL, ICamera camera) 
         {
             vertexShader.SetValues(camera, camera.ShaderResults);
-            vertexShader.SetValue("uModel", Transform.CalculateMatrixTransform() * MatrixHelper.CalculateViewMatrix(camera.Transform));
+            vertexShader.SetValue("uModel", Transform.CalculateMatrixTransform());
 
             var vectorColor = new Vector3(BaseColor.R, BaseColor.G, BaseColor.B);
             vertexShader.SetValue("vColor", vectorColor);

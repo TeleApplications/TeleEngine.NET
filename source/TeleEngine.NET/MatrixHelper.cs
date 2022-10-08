@@ -7,7 +7,7 @@ namespace TeleEngine.NET
 {
     public static class MatrixHelper
     {
-        public static float CalculateDegreesToRadians(int degree) =>
+        public static float CalculateDegreesToRadians(float degree) =>
             degree * (MathF.PI / 180f);
 
         public static Matrix4x4 CalculateModelMatrix(int degree) 

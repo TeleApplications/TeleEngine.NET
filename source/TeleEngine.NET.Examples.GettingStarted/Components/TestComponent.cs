@@ -17,7 +17,7 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
         private static KeyboardInput keyboardState = Shared.GetInstance<KeyboardInput>()!;
         private static MouseInput mouseState = Shared.GetInstance<MouseInput>()!;
 
-        public float Speed { get; set; } = 0.1f;
+        public float Speed { get; set; } = 0.08f;
 
         public override Transform Transform { get; set; } =
             new()
@@ -36,13 +36,12 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
         {
             var mousePosition = mouseState.CalculateRelativeMousePosition();
             MainScene.CurrentViewWindow.Title = $"X: {mousePosition.X} Y: {mousePosition.Y}";
-            //Transform = new() { Position = new Vector3(-mousePosition.X, mousePosition.Y, Transform.Position.Z), Rotation = Transform.Rotation, Scale = Transform.Scale };
+            //Transform = new() { Position = new Vector3D(-mousePosition.X, mousePosition.Y, Transform.Position.Z), Rotation = Transform.Rotation, Scale = Transform.Scale };
 
-            int rotationValue = 0;
-            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.Q)) 
-                rotationValue = 1;
+            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.Q))
+                camera.Yaw += Speed * 15;
             if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.E))
-                rotationValue = -1;
+                camera.Yaw -= Speed * 15;
 
             if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.W))
                 camera.Transform.Position += camera.VectorData.Front * Speed;
@@ -50,11 +49,9 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
                 camera.Transform.Position -= camera.VectorData.Front * Speed;
 
             if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.A))
-                camera.Transform.Position += (Vector3D)(Vector3.Normalize(Vector3.Cross(camera.VectorData.Front, camera.VectorData.Up)) * Speed);
+                camera.Transform.Position -= (Vector3D)(Vector3.Normalize(Vector3.Cross(camera.VectorData.Front, camera.VectorData.Up)) * Speed);
             if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.D))
-                camera.Transform.Position -= (Vector3D)Vector3.Normalize(Vector3.Cross(camera.VectorData.Front, camera.VectorData.Up)) * Speed;
-
-            camera.Yaw += rotationValue;
+                camera.Transform.Position += (Vector3D)Vector3.Normalize(Vector3.Cross(camera.VectorData.Front, camera.VectorData.Up)) * Speed;
         }
     }
 }
