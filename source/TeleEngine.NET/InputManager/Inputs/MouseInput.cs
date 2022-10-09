@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Numerics;
 using TeleEngine.NET.InputManager.Enums;
 using TeleEngine.NET.InputManager.Interfaces;
+using TeleEngine.NET.MathComponents.Vectors;
 using TeleEngine.NET.SharedObjects.Attributes;
 using TeleEngine.NET.Views;
 
@@ -12,6 +13,8 @@ namespace TeleEngine.NET.InputManager.Inputs
     [Shared(typeof(MouseInput))]
     public sealed class MouseInput : IInput<MouseKeys>
     {
+        public float MouseSensivity { get; set; }
+
         private static IWindow currentWindow => View.CurrentViewWindow;
 
         public ImmutableArray<int> ValidKeys { get; set; } =
@@ -30,29 +33,46 @@ namespace TeleEngine.NET.InputManager.Inputs
             return keyState && currentWindow.WindowState != WindowState.Minimized;
         }
 
-        public Vector2 CalculateRelativeMousePosition() 
+        public Vector2D CalculateRelativeMousePosition() 
         {
             var windowSize = currentWindow.Size;
             var mousePosition = CalculateMousePosition();
 
-            Vector2 resultVector = new Vector2((mousePosition.X - (windowSize.X / 2)), (mousePosition.Y - (windowSize.Y / 2)));
-            return new Vector2(resultVector.X / 38, resultVector.Y / 30);
+            Vector2D resultVector = new Vector2D((mousePosition.X - (windowSize.X / 2)), (mousePosition.Y - (windowSize.Y / 2)));
+            return new Vector2D(resultVector.X / 38, resultVector.Y / 30);
         }
 
-        public Vector2 CalculateMousePosition()
+        public Vector2D CalculateMousePosition()
         {
             _ = InteropHelper.GetCursorPos(out Point mousePoint);
 
-            var mousePosition = new Vector2(mousePoint.X, mousePoint.Y);
-            var windowPosition = (Vector2)currentWindow.Position;
+            var mousePosition = new Vector2D(mousePoint.X, mousePoint.Y);
+            var windowPosition = (Vector2D)(Vector2)currentWindow.Position;
             int mouseIndex = GetMouseValidIndex(mousePosition, windowPosition, currentWindow.Size.X, currentWindow.Size.Y);
 
-            return mouseIndex * (mousePosition - windowPosition);
+            return (mousePosition - windowPosition) * mouseIndex;
         }
 
-        private int GetMouseValidIndex(Vector2 mousePostion, Vector2 windowPosition, int width, int height) 
+        public Vector2D CalculateMouseDelta(Vector2D lastPosition)
         {
-            Vector2 extendWindowPosition = windowPosition + new Vector2(width, height);
+            Vector2D relativePosition = CalculateRelativeMousePosition();
+            var positionDifference = relativePosition - lastPosition;
+
+            return positionDifference * MouseSensivity;
+        }
+
+        public void LockMouse() 
+        {
+            var windowSize = currentWindow.Size;
+
+            int xPosition = currentWindow.Position.X + (windowSize.X / 2);
+            int yPosition = currentWindow.Position.Y + (windowSize.Y / 2);
+            InteropHelper.SetCursorPos(xPosition, yPosition);
+        }
+
+        private int GetMouseValidIndex(Vector2D mousePostion, Vector2D windowPosition, int width, int height)
+        {
+            Vector2D extendWindowPosition = windowPosition + new Vector2D(width, height);
 
             var vectorDifference = mousePostion - windowPosition;
             var windowDifference = extendWindowPosition - mousePostion;

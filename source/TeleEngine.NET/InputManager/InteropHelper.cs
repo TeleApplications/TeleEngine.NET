@@ -10,5 +10,8 @@ namespace TeleEngine.NET.InputManager
 
         [DllImport("user32.dll")]
         public static extern bool GetCursorPos(out Point point);
+
+        [DllImport("user32.dll")]
+        public static extern bool SetCursorPos(int x, int y);
     }
 }

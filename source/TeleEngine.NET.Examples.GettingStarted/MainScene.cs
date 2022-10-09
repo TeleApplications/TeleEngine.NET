@@ -22,7 +22,7 @@ namespace TeleEngine.NET.Examples.GettingStarted
             Task.Run(async () => await SpawnObjects<TestComponent>(1, (int index) =>
             new Transform()
             {
-                Position = new Vector3D(-aspectRatio + ((int)(index / (MathF.Round(index / 7) + 1))), -5f + (MathF.Round(index / 5)), 10),
+                Position = new Vector3D(-aspectRatio + ((int)(index / (MathF.Round(index / 7) + 1))), 0, 10),
                 Rotation = Quaternion.Identity,
                 Scale = 1f
             }, 10));

@@ -15,7 +15,6 @@ namespace TeleEngine.NET.Components.Vertices
         public Color BaseColor { get; set; } = Color.Green;
 
         protected ShaderCore vertexShader { get; set; }
-
         protected virtual GLEnum vertexMode { get; } = GLEnum.Lines;
 
         public abstract Transform Transform { get; set; }

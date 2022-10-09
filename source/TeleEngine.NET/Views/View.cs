@@ -11,6 +11,9 @@ namespace TeleEngine.NET.Views
     public abstract partial class View : Intefaces.IView
     {
         public static IWindow CurrentViewWindow  { get; private set; }
+        public static float DeltaTime { get; private set; }
+
+        private static float lastDeltaTime;
 
         public IWindow ViewWindow { get; set; }
         public WindowOptions Options { get; set; }
@@ -66,7 +69,6 @@ namespace TeleEngine.NET.Views
         public GL OpenGL { get; set; }
         public abstract ICamera Camera { get; set; }
 
-        public double DeltaTime { get; private set; }
         public long TickDifference { get; protected set; } = 0;
 
         public List<InicializationAction<GL>> InicializationActions { get; set; } =
@@ -87,9 +89,9 @@ namespace TeleEngine.NET.Views
             ViewWindow.Load += async() 
                 => await StartViewAsync();
             ViewWindow.Render += async(double doubleHolder) 
-                => await RenderViewAsync(doubleHolder);
+                => await RenderViewAsync();
             ViewWindow.Update += async(double doubleHolder) 
-                => await UpdateViewAsync();
+                => await UpdateViewAsync(doubleHolder);
 
             Task.Run(() => ViewWindow.Run());
         }
@@ -106,9 +108,8 @@ namespace TeleEngine.NET.Views
             }
         }
 
-        public async Task RenderViewAsync(double renderTime) 
+        public async Task RenderViewAsync() 
         {
-            DeltaTime = renderTime; 
             OpenGL.Clear((uint)ClearBufferMask.ColorBufferBit | (uint)ClearBufferMask.DepthBufferBit);
 
             await RunComponentsRenderAction(async (IComponent currentComponent) =>
@@ -133,8 +134,12 @@ namespace TeleEngine.NET.Views
             });
         }
 
-        protected async Task UpdateViewAsync() 
+        protected async Task UpdateViewAsync(double renderTime) 
         {
+            var lastDelta = DeltaTime;
+            DeltaTime = MathF.Abs((float)(renderTime + (Math.PI / 100)) - lastDeltaTime);
+            lastDeltaTime = lastDelta;
+
             ViewWindow.Title = $"{TickDifference}";
             await RunComponentsRenderAction(async (IComponent currentComponent) 
                => await currentComponent.UpdateAsync(OpenGL, Camera));

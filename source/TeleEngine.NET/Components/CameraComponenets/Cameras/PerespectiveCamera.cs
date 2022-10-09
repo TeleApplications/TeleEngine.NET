@@ -49,7 +49,7 @@ namespace TeleEngine.NET.Components.CameraComponenets.Cameras
 
         private Vector3D CalculateUpDirection() 
         {
-            var normalizedPosition = Vector3.Normalize(Vector3.Zero - Transform.Position);
+            var normalizedPosition = Vector3.Normalize(Transform.Position - Vector3.Zero);
             var upDirection = Vector3.UnitY;
 
             var vectorCross = Vector3.Cross(upDirection, normalizedPosition);
