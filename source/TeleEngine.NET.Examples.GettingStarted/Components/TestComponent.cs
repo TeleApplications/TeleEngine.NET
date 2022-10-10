@@ -38,8 +38,8 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
             //Transform = new() { Position = new Vector3D(-mousePosition.X, mousePosition.Y, Transform.Position.Z), Rotation = Transform.Rotation, Scale = Transform.Scale };
 
             var mouseDelta = mouseState.CalculateMouseDelta((Vector2D)Vector2.Zero);
-            camera.Yaw += mouseDelta.X + MathF.Sin(mouseDelta.X);
-            camera.Pitch -= mouseDelta.Y + MathF.Sin(mouseDelta.Y);
+            camera.Yaw += mouseDelta.X + MathF.Sin(mouseDelta.X / 8);
+            camera.Pitch -= mouseDelta.Y + MathF.Sin(mouseDelta.Y / 8);
 
 
             if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.W))

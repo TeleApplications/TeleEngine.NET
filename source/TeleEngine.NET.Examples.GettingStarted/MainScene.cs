@@ -3,6 +3,7 @@ using System.Numerics;
 using TeleEngine.NET.Components;
 using TeleEngine.NET.Components.CameraComponenets.Cameras;
 using TeleEngine.NET.Components.CameraComponenets.Interfaces;
+using TeleEngine.NET.Components.Vertices.SimpleShapeVertices;
 using TeleEngine.NET.Examples.GettingStarted.Components;
 using TeleEngine.NET.MathComponents.Vectors;
 using TeleEngine.NET.Views.CustomViews.Scene;
@@ -16,13 +17,13 @@ namespace TeleEngine.NET.Examples.GettingStarted
 
         public MainScene(WindowOptions options) : base(options)
         {
-            //Task.Run(async () => await AddComponent(new CameraComponent()));
+            Task.Run(async () => await AddComponent(new FloorComponent()));
 
             float aspectRatio = options.Size.X / options.Size.Y;
             Task.Run(async () => await SpawnObjects<TestComponent>(1, (int index) =>
             new Transform()
             {
-                Position = new Vector3D(-aspectRatio + ((int)(index / (MathF.Round(index / 7) + 1))), 0, 10),
+                Position = new Vector3D(-aspectRatio + ((int)(index / (MathF.Round(index / 7) + 1))), ((int)(index / (MathF.Round(index / 7) + 1))), 10),
                 Rotation = Quaternion.Identity,
                 Scale = 1f
             }, 10));

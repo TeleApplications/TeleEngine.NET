@@ -136,9 +136,6 @@ namespace TeleEngine.NET.Views
 
         protected async Task UpdateViewAsync(double renderTime) 
         {
-            var lastDelta = DeltaTime;
-            DeltaTime = MathF.Abs((float)(renderTime + (Math.PI / 100)) - lastDeltaTime);
-            lastDeltaTime = lastDelta;
 
             ViewWindow.Title = $"{TickDifference}";
             await RunComponentsRenderAction(async (IComponent currentComponent) 
@@ -147,6 +144,10 @@ namespace TeleEngine.NET.Views
             TickDifference = CalculateTickDifference();
             lastTickWatch = tickWatch;
             tickWatch.Restart();
+
+            var lastDelta = DeltaTime;
+            DeltaTime = MathF.Abs((float)(renderTime - lastDeltaTime));
+            lastDeltaTime = lastDelta;
         }
 
         private long CalculateTickDifference() 

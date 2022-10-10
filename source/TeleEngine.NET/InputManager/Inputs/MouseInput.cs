@@ -13,10 +13,9 @@ namespace TeleEngine.NET.InputManager.Inputs
     [Shared(typeof(MouseInput))]
     public sealed class MouseInput : IInput<MouseKeys>
     {
-        public float MouseSensivity { get; set; }
-
         private static IWindow currentWindow => View.CurrentViewWindow;
 
+        public float MouseSensivity { get; set; }
         public ImmutableArray<int> ValidKeys { get; set; } =
             ImmutableArray.Create
             (
