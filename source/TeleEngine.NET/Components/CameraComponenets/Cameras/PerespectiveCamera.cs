@@ -30,7 +30,7 @@ namespace TeleEngine.NET.Components.CameraComponenets.Cameras
         public float AspectRatio { get; set; } = 1f;
 
         public float Pitch { get; set; } = 0;
-        public float Yaw { get; set; } = -90;
+        public float Yaw { get; set; } = 90;
 
         private CameraVectorData CalculateVectorData() 
         {
@@ -43,7 +43,9 @@ namespace TeleEngine.NET.Components.CameraComponenets.Cameras
                 Y = (MathF.Sin(pitchRadians)),
                 Z = (MathF.Sin(yawRadians) * MathF.Cos(pitchRadians)),
             };
+            frontVector = Vector3.Normalize(frontVector);
             var upVector = CalculateUpDirection();
+
             return new CameraVectorData(upVector, (Vector3D)frontVector);
         }
 

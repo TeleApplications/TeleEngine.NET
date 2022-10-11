@@ -38,8 +38,8 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
             //Transform = new() { Position = new Vector3D(-mousePosition.X, mousePosition.Y, Transform.Position.Z), Rotation = Transform.Rotation, Scale = Transform.Scale };
 
             var mouseDelta = mouseState.CalculateMouseDelta((Vector2D)Vector2.Zero);
-            camera.Yaw += mouseDelta.X + MathF.Sin(mouseDelta.X / 8);
-            camera.Pitch -= mouseDelta.Y + MathF.Sin(mouseDelta.Y / 8);
+            camera.Yaw += mouseDelta.X;
+            camera.Pitch -= mouseDelta.Y;
 
 
             if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.W))
@@ -48,14 +48,14 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
                 camera.Transform.Position -= (camera.VectorData.Front * new Vector3D(1, 0, 1)) * Speed * MainScene.DeltaTime;
 
             if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.A))
-                camera.Transform.Position -= (Vector3D)((Vector3.Normalize(Vector3.Cross(camera.VectorData.Front, new Vector3D(0, 1, 0)))) * Speed) * MainScene.DeltaTime;
+                camera.Transform.Position -= (Vector3D)((Vector3.Normalize(Vector3.Cross(camera.VectorData.Front, camera.VectorData.Up))) * Speed * MainScene.DeltaTime);
             if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.D))
-                camera.Transform.Position += (Vector3D)((Vector3.Normalize(Vector3.Cross(camera.VectorData.Front, new Vector3D(0, 1, 0)))) * Speed) * MainScene.DeltaTime;
+                camera.Transform.Position += (Vector3D)((Vector3.Normalize(Vector3.Cross(camera.VectorData.Front, camera.VectorData.Up))) * Speed * MainScene.DeltaTime);
 
             if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.Q))
-                camera.Transform.Position.Y -= 0.5f * Speed * MainScene.DeltaTime;
+                camera.Transform.Position -= camera.VectorData.Up * Speed * MainScene.DeltaTime;
             if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.Space))
-                camera.Transform.Position.Y += 0.5f * Speed * MainScene.DeltaTime;
+                camera.Transform.Position += camera.VectorData.Up * Speed * MainScene.DeltaTime;
 
             mouseState.LockMouse();
         }
