@@ -1,11 +1,13 @@
-﻿namespace TeleEngine.NET.Models.Interfaces
+﻿
+namespace TeleEngine.NET.Models.Interfaces
 {
     public interface IFormat
     {
-        public string Name { get; }
+        public abstract string Name { get; } 
+        public ReadOnlyMemory<string> ObjectData { get; set; }
 
-        public ReadOnlyMemory<float> LoadData(string path);
+        public Task<ModelData> CreateModelAsync() { return default!; }
 
-        public bool ValideteFormat(string path);
+        public bool ValideteFormat();
     }
 }
