@@ -1,4 +1,5 @@
-﻿using TeleEngine.NET.Models.Interfaces;
+﻿using TeleEngine.NET.Components.Vertices;
+using TeleEngine.NET.Models.Interfaces;
 
 namespace TeleEngine.NET.Models
 {
@@ -9,10 +10,10 @@ namespace TeleEngine.NET.Models
 
         public ObjectFormat(string path) 
         {
-            Task.Run(async() => ObjectData = await File.ReadAllLinesAsync(path));
+            ObjectData = File.ReadAllLines(path);
         }
 
-        public abstract Task<ModelData> CreateModelAsync();
+        public abstract Task<VertexModel> CreateModelAsync();
 
         public virtual bool ValideteFormat() => ObjectData.Length > 0;
     }

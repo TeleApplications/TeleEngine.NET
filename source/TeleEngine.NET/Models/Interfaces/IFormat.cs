@@ -1,4 +1,5 @@
-﻿
+﻿using TeleEngine.NET.Components.Vertices;
+
 namespace TeleEngine.NET.Models.Interfaces
 {
     public interface IFormat
@@ -6,7 +7,7 @@ namespace TeleEngine.NET.Models.Interfaces
         public abstract string Name { get; } 
         public ReadOnlyMemory<string> ObjectData { get; set; }
 
-        public Task<ModelData> CreateModelAsync() { return default!; }
+        public Task<VertexModel> CreateModelAsync() { return default!; }
 
         public bool ValideteFormat();
     }

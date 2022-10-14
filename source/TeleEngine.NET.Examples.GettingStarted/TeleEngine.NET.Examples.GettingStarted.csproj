@@ -12,4 +12,8 @@
     <ProjectReference Include="..\TeleEngine.NET\TeleEngine.NET.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Objects\" />
+  </ItemGroup>
+
 </Project>

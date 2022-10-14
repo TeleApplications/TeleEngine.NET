@@ -50,7 +50,7 @@ namespace TeleEngine.NET.Components.Vertices.DefaultModels.Models
                    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
                    -0.5f,  0.5f, -0.5f,  0.0f, 0.0f
                 },
-                Indexes = new uint[]
+                Indexes = new float[]
                 {
                     0, 1, 3,
                     1, 2, 3

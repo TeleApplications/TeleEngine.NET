@@ -6,6 +6,7 @@ using TeleEngine.NET.Components.Vertices;
 using TeleEngine.NET.Components.Vertices.DefaultModels.Models;
 using TeleEngine.NET.InputManager.Inputs;
 using TeleEngine.NET.MathComponents.Vectors;
+using TeleEngine.NET.Models.Formats;
 using TeleEngine.NET.SharedObjects;
 
 namespace TeleEngine.NET.Examples.GettingStarted.Components
@@ -24,7 +25,8 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
                 Rotation = System.Numerics.Quaternion.Identity,
                 Scale = 1.25f
             };
-        public override VertexModel Model => TriangleModel.Shared.Model;
+        public override VertexModel Model =>
+            new ObjFormat(@"C:\Users\uzivatel\source\repos\TeleEngine.NET\source\TeleEngine.NET.Examples.GettingStarted\Objects\cube.obj").CreateModelAsync().Result;
 
         public TestComponent() 
         {
