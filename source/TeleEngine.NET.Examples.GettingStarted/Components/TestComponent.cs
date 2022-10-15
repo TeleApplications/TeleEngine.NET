@@ -26,7 +26,7 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
                 Scale = 1.25f
             };
         public override VertexModel Model =>
-            new ObjFormat(@"C:\Users\uzivatel\source\repos\TeleEngine.NET\source\TeleEngine.NET.Examples.GettingStarted\Objects\cube.obj").CreateModelAsync().Result;
+            new ObjFormat(@"C:\Users\uzivatel\source\repos\TeleEngine.NET\source\TeleEngine.NET.Examples.GettingStarted\Objects\cube.obj").CreateModel();
 
         public TestComponent() 
         {

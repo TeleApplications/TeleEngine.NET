@@ -4,10 +4,9 @@ namespace TeleEngine.NET.Models.Interfaces
 {
     public interface IFormat
     {
-        public abstract string Name { get; } 
-        public ReadOnlyMemory<string> ObjectData { get; set; }
+        public abstract string Name { get; }
 
-        public Task<VertexModel> CreateModelAsync() { return default!; }
+        public VertexModel CreateModel();
 
         public bool ValideteFormat();
     }
