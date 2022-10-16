@@ -6,28 +6,41 @@ namespace TeleEngine.NET.Models
 {
     public abstract class ObjectFormat<T> : IFormat where T : ObjectFormat<T>, new()
     {
-        private ReadOnlyMemory<string> objectData;
+        private ReadOnlyMemory<string> fileLines;
         private T? currentFormat;
 
-        public abstract ImmutableArray<ElementFunction<T, ReadOnlyMemory<float>>> ElementFunctions { get; }
+        public ObjectData<float> FormatData { get; set; }
+        public abstract ImmutableArray<ElementFunction<T, float>> ElementFunctions { get; }
         public abstract string Name { get; }
 
         public ObjectFormat() { }
         public ObjectFormat(string path) 
         {
-            objectData = File.ReadAllLines(path);
+            fileLines = File.ReadAllLines(path);
             currentFormat = new T();
         }
 
         public VertexModel CreateModel() 
         {
-            int dataLength = objectData.Length;
-            Memory<float> vertices = new float[dataLength * 5];
+            var data = CreateObjectData();
+            Memory<float> finalVertices = new float[data.Faces.Count];
 
-            int verticesCount = 0;
-            for (int i = 0; i < dataLength; i++)
+            for (int i = 0; i < data.Faces.Count; i++) 
             {
-                ReadOnlyMemory<char> lineCharacters = objectData.Span[i].ToCharArray();
+                int currentIndex = (int)(data.Faces.Data.Span[i] - 1);
+                finalVertices.Span[i] = data.Vertices.Data.Span[currentIndex];
+            }
+            return new VertexModel(finalVertices, new float[] { 0 });
+        }
+
+        private ObjectData<float> CreateObjectData()
+        {
+            int linesCount = fileLines.Length;
+            currentFormat!.FormatData = ObjectData<float>.Create(linesCount * 6);
+
+            for (int i = 0; i < fileLines.Length; i++)
+            {
+                ReadOnlyMemory<char> lineCharacters = fileLines.Span[i].ToCharArray();
                 int charactersCount = CalculateFirstSeparateLength(lineCharacters, (char)32);
 
                 int index = lineCharacters.Length - (Math.Abs((lineCharacters.Length / 1) - 1)); 
@@ -36,17 +49,16 @@ namespace TeleEngine.NET.Models
                 var symbols = lineCharacters[0..currentLength];
                 var currentFunction = symbols.Length > 0 && (byte)symbols.Span[0] != 32 ? FindFunction(symbols.Span.ToString()) : default;
 
-                if (currentFunction.Function is not null)
+                if (currentFunction.Function is not null) 
                 {
-                    var verticesData = currentFunction.Function.Invoke(lineCharacters[2..], currentFormat!);
-                    verticesData.CopyTo(vertices[verticesCount..]);
-                    verticesCount += verticesData.Length;
+                    currentFunction.Function.Invoke(lineCharacters[2..], currentFormat!);
                 }
             }
-            return new VertexModel(vertices[0..verticesCount], new float[] { 0 }); 
+
+            return currentFormat!.FormatData;
         }
 
-        protected virtual ElementFunction<T, ReadOnlyMemory<float>> FindFunction(string symbol) 
+        protected virtual ElementFunction<T, float> FindFunction(string symbol) 
         {
             for (int i = 0; i < ElementFunctions.Length; i++)
             {
@@ -68,6 +80,6 @@ namespace TeleEngine.NET.Models
             return 0;
         }
 
-        public virtual bool ValideteFormat() => objectData.Length > 0;
+        public virtual bool ValideteFormat() => fileLines.Length > 0;
     }
 }

@@ -8,19 +8,39 @@ namespace TeleEngine.NET.Models.Formats
     public sealed class ObjFormat : ObjectFormat<ObjFormat>
     {
         public override string Name => nameof(ObjFormat);
-        public override ImmutableArray<ElementFunction<ObjFormat, ReadOnlyMemory<float>>> ElementFunctions =>
+        public override ImmutableArray<ElementFunction<ObjFormat, float>> ElementFunctions =>
             ImmutableArray.Create
             (
-                new ElementFunction<ObjFormat, ReadOnlyMemory<float>>("v", (ReadOnlyMemory<char> line, ObjFormat format) => 
+                new ElementFunction<ObjFormat, float>("v", (ReadOnlyMemory<char> line, ObjFormat format) => 
                 {
-                    return format.SeparateData<float>(line, (char)32);
+                    int count = format.FormatData.Vertices.Count;
+                    var data = format.SeparateData<float>(line, (char)32); 
+                    data.CopyTo(format.FormatData.Vertices.Data[count..]);
+
+                    format.FormatData.Vertices.Count += data.Length;
+                }),
+                new ElementFunction<ObjFormat, float>("f", (ReadOnlyMemory<char> line, ObjFormat format) => 
+                {
+                    var faceLines = format.SeparateData<string>(line, (char)32);
+
+                    int lastIndex = 0;
+                    for (int i = 0; i < faceLines.Length; i++)
+                    {
+                        var currentFaces = format.SeparateData<float>(faceLines.Span[i].ToCharArray(), (char)47);
+                        int currentIndex = format.FormatData.Faces.Count + lastIndex;
+
+                        currentFaces.CopyTo(format.FormatData.Faces.Data[currentIndex..]);
+                        lastIndex += currentFaces.Length;
+                    }
+
+                    format.FormatData.Faces.Count += lastIndex;
                 })
             );
 
         public ObjFormat(string path) : base(path) { }
         public ObjFormat() { }
 
-        private ReadOnlyMemory<T> SeparateData<T>(ReadOnlyMemory<char> line, char separator) where T : unmanaged
+        private ReadOnlyMemory<T> SeparateData<T>(ReadOnlyMemory<char> line, char separator)
         {
             var indexes = new List<T>();
 
@@ -40,9 +60,9 @@ namespace TeleEngine.NET.Models.Formats
         }
 
         //In the future update of .NET version, this will be totally redone by creating generic number
-        private T ParseValue<T>(string value) where T : unmanaged 
+        private T ParseValue<T>(string value)
         {
-            return (T)(dynamic)float.Parse(value, CultureInfo.InvariantCulture); 
+            return (typeof(T) == typeof(string) ? (T)(dynamic)value : (T)(dynamic)float.Parse(value, CultureInfo.InvariantCulture));
         }
     }
 }
