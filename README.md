@@ -10,7 +10,7 @@ in a low level form
 - After some time, when this project will be in a usable form, we are going to provide specific benchmarks
 
 ### TODO
-- [x] Loading vertices from .obj, .stl, .dae, .abc -> 25%
+- [x] Loading vertices from .obj, .stl, .dae, .abc -> 25% (.obj)
 - [ ] Generating shaders from C# implementation
 - [x] Having at least two build in camera components -> Y orientation is causing weird translations
 - [ ] Create a proper documentation
