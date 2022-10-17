@@ -23,12 +23,21 @@ namespace TeleEngine.NET.Models
         public VertexModel CreateModel() 
         {
             var data = CreateObjectData();
-            Memory<float> finalVertices = new float[data.Faces.Count];
+            Memory<float> finalVertices = new float[data.Faces.Count * 3];
 
-            for (int i = 0; i < data.Faces.Count; i++) 
+            for (int i = 0; i < data.Faces.Count; i+=3) 
             {
-                int currentIndex = (int)(data.Faces.Data.Span[i] - 1);
-                finalVertices.Span[i] = data.Vertices.Data.Span[currentIndex];
+                int currentIndex = (int)(data.Faces.Data.Span[i] - 1) * 3;
+
+                Span<float> currentVertices = new float[3];
+                for (int j = 0; j < currentVertices.Length; j++)
+                {
+                    int index = currentIndex + j;
+                    currentVertices[j] = data.Vertices.Data.Span[index];
+                }
+
+                int vertexCount = i * 3;
+                currentVertices.CopyTo(finalVertices.Span[vertexCount..]);
             }
             return new VertexModel(finalVertices, new float[] { 0 });
         }
