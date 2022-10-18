@@ -37,7 +37,6 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
             mouseState.MouseSensivity = 7;
             var mousePosition = mouseState.CalculateRelativeMousePosition();
             MainScene.CurrentViewWindow.Title = $"X: {mousePosition.X} Y: {mousePosition.Y}";
-            //Transform = new() { Position = new Vector3D(-mousePosition.X, mousePosition.Y, Transform.Position.Z), Rotation = Transform.Rotation, Scale = Transform.Scale };
 
             var mouseDelta = mouseState.CalculateMouseDelta((Vector2D)Vector2.Zero);
             camera.Yaw += mouseDelta.X;

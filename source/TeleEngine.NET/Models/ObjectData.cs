@@ -15,6 +15,7 @@ namespace TeleEngine.NET.Models
 
     public sealed class ObjectData<T> where T : unmanaged
     {
+        //In the future this will be done by bigger abstraction
         public DataSet<T> Vertices { get; set; }
         public DataSet<T> Textures { get; set; }
         public DataSet<T> Normals { get; set; }
