@@ -119,7 +119,7 @@ namespace TeleEngine.NET.Views
                 vertexData = currentComponent.Data;
                 tickWatch.Start();
 
-                unsafe { OpenGL.DrawArrays(GLEnum.Triangles, 0, 128); }
+                unsafe { OpenGL.DrawArrays(GLEnum.Triangles, 0, 2048); }
             });
         }
 
