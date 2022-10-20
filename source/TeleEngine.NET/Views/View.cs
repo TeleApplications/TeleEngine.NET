@@ -98,7 +98,7 @@ namespace TeleEngine.NET.Views
 
         public void Inicializate() 
         {
-            OpenGL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+            OpenGL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Point);
             OpenGL.PatchParameter(GLEnum.PatchVertices, 3);
             OpenGL.Enable(EnableCap.DepthTest);
 
@@ -119,7 +119,7 @@ namespace TeleEngine.NET.Views
                 vertexData = currentComponent.Data;
                 tickWatch.Start();
 
-                unsafe { OpenGL.DrawArrays(GLEnum.Triangles, 0, 2048); }
+                unsafe { OpenGL.DrawArrays(GLEnum.Triangles, 0, 4086); }
             });
         }
 
