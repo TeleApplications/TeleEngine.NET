@@ -39,10 +39,9 @@ namespace TeleEngine.NET.Models
                     finalVertices.Span[index] = currentValue;
                 }
 
-
                 verticesIndex++;
             }
-            return new VertexModel(finalVertices, data.Faces.Data);
+            return new VertexModel(finalVertices, data.Faces.Data[0..data.Faces.Count]);
         }
 
         private ObjectData<float> CreateObjectData()
