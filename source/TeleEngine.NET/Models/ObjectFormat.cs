@@ -25,23 +25,21 @@ namespace TeleEngine.NET.Models
             var data = CreateObjectData();
             Memory<float> finalVertices = new float[data.Faces.Count];
 
-            int verticesIndex = 0;
+            int finalCount = 0;
             for (int i = 0; i < data.Faces.Count; i+=3) 
             {
                 int faceIndex = (int)((data.Faces.Data.Span[i]) - 1) * 3;
 
                 for (int j = 0; j < 3; j++)
                 {
-                    int currentIndex = faceIndex + j;
-                    var currentValue = data.Vertices.Data.Span[currentIndex];
+                    int index = faceIndex + j;
+                    int verticesIndex = (faceIndex / 3) + j;
 
-                    int index = (verticesIndex * 3) + j;
-                    finalVertices.Span[index] = currentValue;
+                    finalVertices.Span[verticesIndex] = data.Vertices.Data.Span[index];
+                    finalCount++;
                 }
-
-                verticesIndex++;
             }
-            return new VertexModel(finalVertices, data.Faces.Data[0..data.Faces.Count]);
+            return new VertexModel(finalVertices[0..finalCount], new uint[] { 0 });
         }
 
         private ObjectData<float> CreateObjectData()

@@ -50,8 +50,7 @@ namespace TeleEngine.NET.Components.Vertices
         {
             unsafe 
             {
-                openGL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 5 * ((uint)sizeof(float)), ((void*)(0 * sizeof(float))));
-                openGL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 5 * ((uint)sizeof(float)), ((void*)(3 * sizeof(float))));
+                openGL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * ((uint)sizeof(float)), ((void*)(0 * sizeof(float))));
             }
             vertexShader = ShaderCore.CreateDefaultShader(openGL);
             await vertexShader.BindAsync();

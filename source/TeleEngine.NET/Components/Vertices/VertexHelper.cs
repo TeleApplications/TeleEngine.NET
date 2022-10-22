@@ -24,8 +24,8 @@ namespace TeleEngine.NET.Components.Vertices
             var vao = openGL.GenVertexArray();
             openGL.BindVertexArray(vao);
 
-            var vbo = CreateHandle(ref openGL, model.Vertices.Span, BufferTargetARB.ArrayBuffer);
-            var ebo = CreateHandle(ref openGL, model.Indexes.Span, BufferTargetARB.ElementArrayBuffer);
+            var vbo = CreateHandle(ref openGL, model.Vertices.Span, BufferTargetARB.ArrayBuffer, vao);
+            var ebo = CreateHandle(ref openGL, model.Indexes.Span, BufferTargetARB.ElementArrayBuffer, vao);
 
             return new VertexData(vbo, ebo, vao);
         }
@@ -39,7 +39,7 @@ namespace TeleEngine.NET.Components.Vertices
             return shaderHandle;
         }
 
-        private unsafe static uint CreateHandle<T>(ref GL openGL, Span<T> vertices, BufferTargetARB glEnum) where T : unmanaged
+        private unsafe static uint CreateHandle<T>(ref GL openGL, Span<T> vertices, BufferTargetARB glEnum, uint vertexArray) where T : unmanaged
         {
             var currentHandle = openGL.GenBuffer();
             openGL.BindBuffer(glEnum, currentHandle);
@@ -49,6 +49,7 @@ namespace TeleEngine.NET.Components.Vertices
             {
                 openGL.BufferData(glEnum, currentSize, data, BufferUsageARB.StaticDraw);
             }
+            openGL.VertexArrayVertexBuffer(vertexArray, 0, currentHandle, IntPtr.Zero, 32);
 
             return currentHandle;
         }

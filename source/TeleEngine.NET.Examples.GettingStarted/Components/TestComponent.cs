@@ -25,11 +25,12 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
                 Rotation = System.Numerics.Quaternion.Identity,
                 Scale = 1.25f
             };
-        public override VertexModel Model =>
-            new ObjFormat(@"C:\Users\uzivatel\source\repos\TeleEngine.NET\source\TeleEngine.NET.Examples.GettingStarted\Objects\cube.obj").CreateModel();
+        public override VertexModel Model => TriangleModel.Shared.Model;
+            //new ObjFormat(@"C:\Users\uzivatel\source\repos\TeleEngine.NET\source\TeleEngine.NET.Examples.GettingStarted\Objects\cube.obj").CreateModel();
 
         public TestComponent() 
         {
+            BaseColor = Color.White;
         }
 
         public override async Task UpdateAsync(GL openGL, ICamera camera)
