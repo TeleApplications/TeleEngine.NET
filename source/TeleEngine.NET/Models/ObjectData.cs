@@ -19,7 +19,7 @@ namespace TeleEngine.NET.Models
         public DataSet<T> Vertices { get; set; }
         public DataSet<T> Textures { get; set; }
         public DataSet<T> Normals { get; set; }
-        public DataSet<T> Faces { get; set; }
+        public DataSet<uint> Faces { get; set; }
 
         public ObjectData() { }
 
@@ -29,7 +29,7 @@ namespace TeleEngine.NET.Models
                 Vertices = new (new T[length]),
                 Textures = new (new T[length]),
                 Normals = new (new T[length]),
-                Faces = new (new T[length]),
+                Faces = new (new uint[length]),
             };
     }
 }

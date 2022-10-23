@@ -26,7 +26,7 @@ namespace TeleEngine.NET.Models.Formats
                     int lastIndex = 0;
                     for (int i = 0; i < faceLines.Length; i++)
                     {
-                        var currentFaces = format.SeparateData<float>(faceLines.Span[i].ToCharArray(), (char)47);
+                        var currentFaces = format.SeparateData<uint>(faceLines.Span[i].ToCharArray(), (char)47);
                         int currentIndex = format.FormatData.Faces.Count + lastIndex;
 
                         currentFaces.CopyTo(format.FormatData.Faces.Data[currentIndex..]);

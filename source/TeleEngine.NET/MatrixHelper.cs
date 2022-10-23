@@ -22,7 +22,7 @@ namespace TeleEngine.NET
             Matrix4x4.CreateLookAt(transform.Position, (Vector3.UnitZ * -1), Vector3.UnitY);
         public static Matrix4x4 CalculateViewMatrix(ICamera camera) =>
             Matrix4x4.CreateLookAt(camera.Transform.Position, camera.Transform.Position + camera.VectorData.Front, camera.VectorData.Up);
-        public static Matrix4x4 CalculateProjectionMatrix(int fieldOfView, float aspectRatio, float minDistance = 0.1f, float maxDistance = 100f) 
+        public static Matrix4x4 CalculateProjectionMatrix(int fieldOfView, float aspectRatio, float minDistance = 0.1f, float maxDistance = 1000f)
         {
             var fieldRadians = CalculateDegreesToRadians(fieldOfView);
             return Matrix4x4.CreatePerspectiveFieldOfView(fieldRadians, aspectRatio, minDistance, maxDistance);

@@ -98,7 +98,7 @@ namespace TeleEngine.NET.Views
 
         public void Inicializate() 
         {
-            OpenGL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Point);
+            OpenGL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
             OpenGL.PatchParameter(GLEnum.PatchVertices, 3);
             OpenGL.Enable(EnableCap.DepthTest);
 
@@ -117,10 +117,15 @@ namespace TeleEngine.NET.Views
                 await currentComponent.RenderAsync(OpenGL, Camera);
                 OpenGL.BindVertexArray(vertexData.VertexBufferPointer);
                 OpenGL.BindVertexArray(vertexData.ElementBufferPointer);
+
                 vertexData = currentComponent.Data;
                 tickWatch.Start();
 
-                unsafe { OpenGL.DrawArrays(GLEnum.Triangles, 0, 4086); }
+                unsafe 
+                {
+                    OpenGL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * ((uint)sizeof(float)), ((void*)(0 * sizeof(float))));
+                    OpenGL.DrawArrays(GLEnum.Triangles, 0, (uint)currentComponent.Model.Vertices.Length * 3);
+                } 
             });
         }
 
