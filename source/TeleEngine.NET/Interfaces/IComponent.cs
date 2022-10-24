@@ -9,11 +9,10 @@ namespace TeleEngine.NET.Intefaces
     public interface IComponent
     {
         public int ComponenetId { get; set; }
-        public abstract Transform Transform { get; set; }
-
-        public abstract VertexModel Model { get; }
-
         public VertexData Data { get; set; }
+
+        public abstract Transform Transform { get; set; }
+        public abstract VertexModel Model { get; }
 
         public async Task StartAsync(GL openGL, IWindow window) { }
 

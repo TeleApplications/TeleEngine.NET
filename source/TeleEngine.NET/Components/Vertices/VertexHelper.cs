@@ -2,13 +2,12 @@
 
 namespace TeleEngine.NET.Components.Vertices
 {
-    public sealed class VertexData 
+    public readonly struct VertexData 
     {
-        public uint ArrayBufferPointer { get; set; }
-        public uint ElementBufferPointer { get; set; }
-        public uint VertexBufferPointer { get; set; }
+        public uint ArrayBufferPointer { get; }
+        public uint ElementBufferPointer { get; }
+        public uint VertexBufferPointer { get; }
 
-        public VertexData() { }
         public VertexData(uint arrayBuffer, uint elementBuffer, uint vertexBuffer) 
         {
             ArrayBufferPointer = arrayBuffer;
@@ -39,7 +38,7 @@ namespace TeleEngine.NET.Components.Vertices
             return shaderHandle;
         }
 
-        private unsafe static uint CreateHandle<T>(ref GL openGL, Span<T> vertices, BufferTargetARB glEnum) where T : unmanaged
+        private unsafe static uint CreateHandle<T>(ref GL openGL, ReadOnlySpan<T> vertices, BufferTargetARB glEnum) where T : unmanaged
         {
             var currentHandle = openGL.GenBuffer();
             openGL.BindBuffer(glEnum, currentHandle);

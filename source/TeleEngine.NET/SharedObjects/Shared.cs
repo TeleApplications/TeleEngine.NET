@@ -60,11 +60,11 @@ namespace TeleEngine.NET.SharedObjects
 
         private static ReadOnlyMemory<SharedInstanceHolder> CreateSharedInstances() 
         {
-            Memory<SharedInstanceHolder> instances = new SharedInstanceHolder[SharedAttributes.Length];
+            SharedInstanceHolder[] instances = new SharedInstanceHolder[SharedAttributes.Length];
             for (int i = 0; i < SharedAttributes.Length; i++)
             {
                 Type currentType = SharedAttributes[i].SharedType;
-                instances.Span[i] = new SharedInstanceHolder(currentType);
+                instances[i] = new SharedInstanceHolder(currentType);
             }
 
             return instances;

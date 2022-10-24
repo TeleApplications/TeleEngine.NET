@@ -13,7 +13,7 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
             {
                 Position = new(0, 0, 0),
                 Rotation = System.Numerics.Quaternion.Identity,
-                Scale = 1.25f
+                Scale = 0.75f
             };
         public override VertexModel Model =>
             new ObjFormat(Path.GetFullPath("Objects/teapot.obj")).CreateModel();

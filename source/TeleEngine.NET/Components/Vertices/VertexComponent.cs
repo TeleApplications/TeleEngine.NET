@@ -10,21 +10,21 @@ namespace TeleEngine.NET.Components.Vertices
 {
     public abstract class VertexComponent : IComponent
     {
-        private IWindow? baseWindow;
-
-        public Color BaseColor { get; set; } = Color.Green;
-
-        protected ShaderCore vertexShader { get; set; }
-        protected virtual GLEnum vertexMode { get; } = GLEnum.Lines;
+        protected IWindow? baseWindow;
+        protected ShaderCore? vertexShader { get; set; }
 
         public abstract Transform Transform { get; set; }
         public abstract VertexModel Model { get; }
 
+        public Color BaseColor { get; set; } = Color.Green;
         public VertexData Data { get; set; }
         public int ComponenetId { get; set; }
 
         public virtual async Task StartAsync(GL openGL, IWindow window)
         {
+            if (vertexShader is null)
+                throw new Exception("Current component didn't have any shader data");
+
             var currentHandle = VertexHelper.CreatePointer(openGL, Model);
             Data = currentHandle;
             baseWindow = window;

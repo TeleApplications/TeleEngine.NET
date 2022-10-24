@@ -1,10 +1,8 @@
 ﻿using Silk.NET.OpenGL;
 using System.Numerics;
 using TeleEngine.NET.Components;
-using TeleEngine.NET.Components.CameraComponenets.Cameras;
 using TeleEngine.NET.Components.CameraComponenets.Interfaces;
 using TeleEngine.NET.Components.Vertices;
-using TeleEngine.NET.Components.Vertices.DefaultModels.Models;
 using TeleEngine.NET.InputManager.Inputs;
 using TeleEngine.NET.MathComponents.Vectors;
 using TeleEngine.NET.SharedObjects;
@@ -15,6 +13,7 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
     {
         private static KeyboardInput keyboardState = Shared.GetInstance<KeyboardInput>()!;
         private static MouseInput mouseState = Shared.GetInstance<MouseInput>()!;
+        private int isMouseLocked = 1;
 
         public float Speed { get; set; } = 100f;
 
@@ -23,7 +22,7 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
             new()
             {
                 Position = (Vector3D)Vector3.Zero,
-                Rotation = System.Numerics.Quaternion.Identity,
+                Rotation = Quaternion.Identity,
                 Scale = 1.25f
             };
 
@@ -36,6 +35,10 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
             var mouseDelta = mouseState.CalculateMouseDelta((Vector2D)Vector2.Zero);
             camera.Yaw += mouseDelta.X;
             camera.Pitch -= mouseDelta.Y;
+
+
+            if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.X))
+                isMouseLocked = isMouseLocked * -1;
 
 
             if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.W))
@@ -53,7 +56,8 @@ namespace TeleEngine.NET.Examples.GettingStarted.Components
             if (keyboardState.GetCurrentKeyState(Silk.NET.GLFW.Keys.Space))
                 camera.Transform.Position += camera.VectorData.Up * Speed * MainScene.DeltaTime;
 
-            mouseState.LockMouse();
+            if(isMouseLocked == 1)
+                mouseState.LockMouse();
         }
     }
 }

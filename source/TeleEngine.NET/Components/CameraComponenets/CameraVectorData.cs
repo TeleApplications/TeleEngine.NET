@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using TeleEngine.NET.MathComponents.Vectors;
+﻿using TeleEngine.NET.MathComponents.Vectors;
 
 namespace TeleEngine.NET.Components.CameraComponenets
 {
